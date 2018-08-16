@@ -239,3 +239,24 @@ If you type `Get-Help` followed by the exact name of a help topic, or by a word 
 > Format-Table -?
 ```
 These commands display same basic information about the `Format-Table` cmdlet.
+## Feature #8 - Display basic information one page at a time
+These commands display basic information about the `Format-Table` cmdlet one page at a time:
+#### Example #12
+```powershell
+> Get-Help Format-Table | Out-Host -Paging
+> help Format-Table
+> man Format-Table
+```
+## Feature #9 - Display more information for a cmdlet
+These commands display more information about the `Format-Table` cmdlet than usual:
+#### Example #13
+```powershell
+> Get-Help Format-Table -Detailed
+> Get-Help Format-Table -Full
+```
+The `Detailed` parameter displays the detailed view of the help topic, which includes parameter descriptions and examples.
+
+The `Full` parameter displays the full view of the help topic, which includes parameter descriptions, examples, input and output object types, and additional notes.
+
+**The `Detailed` and `Full` parameters are effective only for the commands whose help files are installed on the computer.**
+## Feature #10 - Display more information for a cmdlet
