@@ -283,3 +283,71 @@ We could show information also for a user scripts. Even with examples, as it wil
 ```powershell
 > Get-Help .\Get-ServiceStatus.ps1
 ```
+
+# Chapter #4 - Objects and Pipe lines
+
+## Feature #12 - PowerShell return objects
+When we call any command we mostly get as answer object with some type. When powershell try to return object, it's map it into UI table with command `Format-Table` with default properties for it.
+#### Example #17 
+```powershell
+> Get-Help get-v*
+> Get-Help get-v* | Format-Table
+```
+We could see what returned from previous side of pipe line with `Get-Member`(`gm`).
+
+## Feature #13 - PowerShell Pile lines
+
+`Get-Member` accept inputs via argument or via pipe line. In such way pipe line just move output with saving his type. 
+
+#### Example #18
+```powershell
+>Get-Member -InputObject (Get-Help get-v*)
+>Get-Help get-v* | Get-Member
+```
+As you could saw these commands returns different values but work on the same input models. This works because `Get-Member` have different options to accepting input argument. To ensure of that we should check `Get-Help`
+
+#### Example #19
+```powershell
+> Get-Help Get-Member -Parameter Name
+
+-Name <String[]>
+    Specifies the names of one or more properties or methods of the object. Get-Member gets only the specified
+    properties and methods.
+
+    If you use the Name parameter with the MemberType , View , or Static parameter, Get-Member gets only the
+    members that satisfy the criteria of all parameters.
+
+    To get a static member by name, use the Static parameter with the Name parameter.
+
+    Required?                    false
+    Position?                    0
+    Default value                None
+    Accept pipeline input?       False
+    Accept wildcard characters?  false
+
+
+> Get-Help Get-Member -Parameter InputObject
+
+-InputObject <PSObject>
+    Specifies the object whose members are retrieved.
+
+    Using the InputObject parameter is not the same as piping an object to Get-Member . The differences are as
+    follows:
+
+    - When you pipe a collection of objects to Get-Member , Get-Member gets the members of the individual
+    objects in the collection, such as the properties of each string in an array of strings. - When you use
+    InputObject to submit a collection of objects, Get-Member gets the members of the collection, such as the
+    properties of the array in an array of strings.
+
+    Required?                    false
+    Position?                    named
+    Default value                None
+    Accept pipeline input?       True (ByValue)
+    Accept wildcard characters?  false
+```
+Most important information for us is `Accept pipeline input?` and `Position?`.
+
+As we could see default it accept `Name` and `InputObject` accept values from pipeline. In both examples we use `InputObject`, so why we have different output?
+
+In help you could saw that `-InputObject <PSObject>` and this converts to `System.Object` but `Accept pipeline input?  True (ByValue)` have specified that this will be accepted by input value.
+Also this was described at help with more details.
