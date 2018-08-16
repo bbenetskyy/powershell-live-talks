@@ -210,7 +210,7 @@ Alias           gm -> Get-Member
 
 ## Feture #7 - Get-Help
 
-The `Get-Help` cmdlet displays information about PowerShell concepts and commands, including cmdlets, functions, CIM commands, workflows, providers, aliases and scripts.
+The [`Get-Help`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-6) cmdlet displays information about PowerShell concepts and commands, including cmdlets, functions, CIM commands, workflows, providers, aliases and scripts.
 
 To get help for a PowerShell command, type `Get-Help` followed by the command name, such as: 
 #### Example #9
@@ -259,4 +259,27 @@ The `Detailed` parameter displays the detailed view of the help topic, which inc
 The `Full` parameter displays the full view of the help topic, which includes parameter descriptions, examples, input and output object types, and additional notes.
 
 **The `Detailed` and `Full` parameters are effective only for the commands whose help files are installed on the computer.**
-## Feature #10 - Display more information for a cmdlet
+## Feature #10 - Display selected parts of a cmdlet by using parameters
+These commands display selected parts of the `Format-Table` cmdlet help
+#### Example #14
+```powershell
+> Get-Help Format-Table -Examples
+> Get-Help Format-Table -Parameter GroupBy
+> Get-Help Format-Table -Parameter *
+```
+The `Examples` parameter displays only the `NAME`, `SYNOPSIS`, and all Examples. You can not specify an `Example` number because the `Examples` parameter is a `switch parameter`.
+
+The `Parameter` parameter displays only the descriptions of the specified parameters. If you specify only the wildcard character (`*`), it displays the descriptions of all parameters.
+## Feature #10 - search for a word in particular cmdlet help topic
+This example shows how to search for a word in particular cmdlet help topic. This command searches for the word Clixml in the full version of the help topic for the Add-Member cmdled.
+Because the `Get-Help` cmdlet generates a `MamlCommandHelpInfo` object, not a `string`, you have to use a cmdlet that transforms the help topic content into a `string`, such as `Out-String` or `Out-File`.
+#### Example #15
+```powershell
+> Get-Help Add-Member -Full | Out-String -Stream | Select-String -Pattern Clixml
+```
+## Feature #11 - Display help for a script
+We could show information also for a user scripts. Even with examples, as it will be shown in _Chapter #7_ 
+#### Example #16
+```powershell
+> Get-Help .\Get-ServiceStatus.ps1
+```
