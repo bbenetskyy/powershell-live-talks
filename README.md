@@ -1,6 +1,8 @@
 # powersell-live-talks
 PowerShell Quick Start into Scripting
 
+## [Free Powershell E-Books](https://blogs.technet.microsoft.com/pstips/2014/05/26/free-powershell-ebooks/)
+
 # Agenda
 1. Intro
 2. Short intro to PowerShell
@@ -351,3 +353,9 @@ As we could see default it accept `Name` and `InputObject` accept values from pi
 
 In help you could saw that `-InputObject <PSObject>` and this converts to `System.Object` but `Accept pipeline input?  True (ByValue)` have specified that this will be accepted by input value.
 Also this was described at help with more details.
+
+
+get-disk
+
+get all parameters
+get names
