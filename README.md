@@ -374,16 +374,52 @@ FriendlyName         Property   string FriendlyName {get;}
 Guid                 Property   string Guid {get;}
 ...
 ```
-And if we want to run it with then we should run:
+And if we want to run with it, then we should run:
 #### Example #21
 ```powershell
 > Get-Disk |   select -Property *
 ```
-## Feature #14 - Get enhanced info by using Pipe Line
+
+## Feature #14 - Default Formatting
+When I first started out with PowerShell, I thought everything was magic, but the truth is it just takes a little bit of time to understand what is going on underneath the hood. The same is true for the PowerShell formatting system. In fact, if you run the Get-Service cmdlet, the output generated only shows you 3 properties: `Status`, `Name` and `DisplayName`.
+
+
+But if you pipe `Get-Service` to `Get-Member`, you see that the `ServiceController` objects have a lot more than just these three properties, so what is going on?
+
+
+The answer lies within a hidden file that defines how most of the built-in cmdlets display their output. To get an understanding, type the following into the shell and hit enter.
+#### Example #22
+```powershell
+> Get-Service -Name amd*
+Status   Name               DisplayName
+------   ----               -----------
+Running  AMD External Ev... AMD External Events Utility
+
+> Get-Service -Name amd* | Get-Member
+
+   TypeName: System.ServiceProcess.ServiceController
+
+Name                      MemberType    Definition
+----                      ----------    ----------
+Name                      AliasProperty Name = ServiceName
+RequiredServices          AliasProperty RequiredServices = ServicesDependedOn
+Disposed                  Event         System.EventHandler Disposed(System.Object, System.EventArgs)
+Close                     Method        void Close()
+Continue                  Method        void Continue()
+CreateObjRef              Method        System.Runtime.Remoting.ObjRef CreateObjRef(type requestedType)
+...
+ToString                  ScriptMethod  System.Object ToString();
+
+> code-insiders C:\Windows\System32\WindowsPowerShell\v1.0\DotNetTypes.format.ps1xml
+```
+Suddenly, you can see that underneath the hood PowerShell is formatting any objects in the Pipeline that are of the ServiceController type and creating a table with three columns: Status, Name, and DisplayName. But what if the type you are dealing with doesn’t have an entry in that file, or any other format file for that matter? Well then, it’s quite simple actually. If the object coming out of the pipeline has 5 or more properties:
+> PowerShell displays all of the object’s properties in a list; if it has less than 5 properties, it displays them in a table.
+
+## Feature #15 - Get enhanced info by using Pipe Line
 
 Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
 
-#### Example #22
+#### Example #23
 ```powershell
 > Get-Process -Name a* -PipelineVariable  Proc |  ForEach {
    Get-WmiObject  -Class Win32_Service  -ErrorAction SilentlyContinue  -Filter "ProcessID='$($Proc.Id)'" -PipelineVariable  Service |  ForEach {
@@ -415,9 +451,9 @@ Let's see what we done in **Example #22**:
 * `Format-Table` - view output in table style, for this type if will be `Format-List` default.
 * `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
 
-## Feature #15 - Truncating Parameters
+## Feature #16 - Truncating Parameters
 Windows PowerShell also allows you truncate parameter names up until the point where they become ambiguous, that is to say up until the point where PowerShell can no longer figure out which parameter you are talking about
-#### Example #23
+#### Example #24
 ```powershell
 >  Get-Service -Name *sql* -ComputerName localhost
 Status   Name               DisplayName
@@ -441,11 +477,11 @@ Running  SQLWriter          SQL Server VSS Writer
 
 # Chapter #6 - First scripts
 
-## Feature #16 - Script policies
+## Feature #17 - Script policies
 
 Let's create  our first script in current directory. As code we will use simple `Write-Host` to display static text as output in our powershell window
 
-#### Example #24
+#### Example #25
 ```powershell
 > echo 'Write-Host "Script, World!"' > 'First Script.ps1'
 > ls
@@ -476,7 +512,7 @@ In order to prevent malicious scripts from running on your system, PowerShell en
 
 We could check current execution policy by `Get-ExecutionPolicy` command and set by `Set-ExecutionPolicy`.
 
-#### Example #25
+#### Example #26
 ```powershell
 > Get-ExecutionPolicy
 RemoteSigned
