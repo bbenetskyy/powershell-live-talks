@@ -303,6 +303,8 @@ We could see what returned from previous side of pipe line with `Get-Member`(`gm
 
 ## Feature #13 - PowerShell Pile lines
 
+There are plenty of Linux shells with a pipeline, allowing you to send the text that one command outputs as input to the next command in the pipeline. PowerShell takes this to the next level by allowing you to take the objects that one cmdlet outputs and pass them as input to the next cmdlet in the pipeline.
+
 `Get-Member` accept inputs via argument or via pipe line. In such way pipe line just move output with saving his type. 
 
 #### Example #18
