@@ -1,7 +1,9 @@
-# powersell-live-talks
+# powershell-live-talks
 PowerShell Quick Start into Scripting
 
 ## [Free Powershell E-Books](https://blogs.technet.microsoft.com/pstips/2014/05/26/free-powershell-ebooks/)
+## [PowerShell Scripting](https://docs.microsoft.com/en-us/powershell/scripting/powershell-scripting?view=powershell-5.1)
+## [Windows Powershell](https://docs.microsoft.com/en-us/powershell/windows/get-started?view=win10-ps)
 
 # Agenda
 1. Intro
@@ -375,3 +377,19 @@ get-disk
 
 get all parameters
 get names
+
+https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-in-powershell/
+
+```powershell
+> Get-Process -Name a* -PipelineVariable  Proc |  ForEach {
+   Get-WmiObject  -Class Win32_Service  -ErrorAction SilentlyContinue  -Filter "ProcessID='$($Proc.Id)'" -PipelineVariable  Service |  ForEach {
+       [pscustomobject]@{
+            ProcessName = $Proc.Name
+            PID =  $Proc.Id
+            ServiceName = $Service.Name
+            ServiceDisplayName = $Service.DisplayName
+            StartName =  $Service.StartName
+        }
+   }
+ }  | Format-Table  -AutoSize
+```
