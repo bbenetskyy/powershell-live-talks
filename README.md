@@ -245,7 +245,7 @@ If you type `Get-Help` followed by the exact name of a help topic, or by a word 
 > Format-Table -?
 ```
 These commands display same basic information about the `Format-Table` cmdlet.
-## Feature #8 - Display basic information one page at a time
+## Feature #7 - Display basic information one page at a time
 These commands display basic information about the `Format-Table` cmdlet one page at a time:
 #### Example #12
 ```powershell
@@ -253,7 +253,7 @@ These commands display basic information about the `Format-Table` cmdlet one pag
 > help Format-Table
 > man Format-Table
 ```
-## Feature #9 - Display more information for a cmdlet
+## Feature #8 - Display more information for a cmdlet
 These commands display more information about the `Format-Table` cmdlet than usual:
 #### Example #13
 ```powershell
@@ -265,7 +265,7 @@ The `Detailed` parameter displays the detailed view of the help topic, which inc
 The `Full` parameter displays the full view of the help topic, which includes parameter descriptions, examples, input and output object types, and additional notes.
 
 **The `Detailed` and `Full` parameters are effective only for the commands whose help files are installed on the computer.**
-## Feature #10 - Display selected parts of a cmdlet by using parameters
+## Feature #9 - Display selected parts of a cmdlet by using parameters
 These commands display selected parts of the `Format-Table` cmdlet help
 #### Example #14
 ```powershell
@@ -413,13 +413,37 @@ Let's see what we done in **Example #22**:
 * `Format-Table` - view output in table style, for this type if will be `Format-List` default.
 * `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
 
+## Feature #15 - Truncating Parameters
+Windows PowerShell also allows you truncate parameter names up until the point where they become ambiguous, that is to say up until the point where PowerShell can no longer figure out which parameter you are talking about
+#### Example #23
+```powershell
+>  Get-Service -Name *sql* -ComputerName localhost
+Status   Name               DisplayName
+------   ----               -----------
+Running  MSSQL$SQLEXPRESS   SQL Server (SQLEXPRESS)
+Stopped  SQLAgent$SQLEXP... SQL Server Agent (SQLEXPRESS)
+Stopped  SQLBrowser         SQL Server Browser
+Running  SQLTELEMETRY$SQ... SQL Server CEIP service (SQLEXPRESS)
+Running  SQLWriter          SQL Server VSS Writer
+
+> Get-Service -Na *sql* -Com localhost
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  MSSQL$SQLEXPRESS   SQL Server (SQLEXPRESS)
+Stopped  SQLAgent$SQLEXP... SQL Server Agent (SQLEXPRESS)
+Stopped  SQLBrowser         SQL Server Browser
+Running  SQLTELEMETRY$SQ... SQL Server CEIP service (SQLEXPRESS)
+Running  SQLWriter          SQL Server VSS Writer
+```
+
 # Chapter #6 - First scripts
 
-## Feature #14 - Script policies
+## Feature #16 - Script policies
 
 Let's create  our first script in current directory. As code we will use simple `Write-Host` to display static text as output in our powershell window
 
-#### Example #23
+#### Example #24
 ```powershell
 > echo 'Write-Host "Script, World!"' > 'First Script.ps1'
 > ls
@@ -450,7 +474,7 @@ In order to prevent malicious scripts from running on your system, PowerShell en
 
 We could check current execution policy by `Get-ExecutionPolicy` command and set by `Set-ExecutionPolicy`.
 
-#### Example #24
+#### Example #25
 ```powershell
 > Get-ExecutionPolicy
 RemoteSigned
