@@ -421,7 +421,7 @@ Let's create  our first script in current directory. As code we will use simple 
 
 #### Example #23
 ```powershell
-> echo Write-Host "Script, World!" > First Script.ps1
+> echo 'Write-Host "Script, World!"' > 'First Script.ps1'
 > ls
 
     Directory: powershell-live-talks
@@ -432,11 +432,42 @@ d-----       20/08/2018     10:44                .vscode
 -a----       20/08/2018     14:46             58 First Script.ps1
 -a----       16/08/2018     11:48            106 Get-ServiceStatus.ps1
 -a----       20/08/2018     14:23          19881 README.md
+
+> more '.\First Script.ps1'
+Write-Host "Script, World!"
+
+> & '.\First Script.ps1'
+Script, World!
 ```
+Here we move text with command into new file, check if it's exist in directory and see what inside newly created file. After it we execute it.
 
+In order to prevent malicious scripts from running on your system, PowerShell enforces an execution policy. There are 4 execution policies you can use:
 
+* Restricted – Scripts won’t run. Period. (Default setting)
+* RemoteSigned – Locally-created scripts will run. Scripts that were created on another machine will not run unless they are signed by a trusted publisher.
+* AllSigned – Scripts will only run if signed by a trusted publisher (including locally-created scripts).
+* Unrestricted – All scripts will run regardless of who created them and whether or not they are signed.
 
+We could check current execution policy by `Get-ExecutionPolicy` command and set by `Set-ExecutionPolicy`.
 
+#### Example #24
+```powershell
+> Get-ExecutionPolicy
+RemoteSigned
+
+> Set-ExecutionPolicy RemoteSigned
+Set-ExecutionPolicy : Access to the registry key
+'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell' is denied. To change the
+execution policy for the default (LocalMachine) scope, start Windows PowerShell with the "Run as administrator"
+option. To change the execution policy for the current user, run "Set-ExecutionPolicy -Scope CurrentUser".
+At line:1 char:1
++ Set-ExecutionPolicy RemoteSigned
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (:) [Set-ExecutionPolicy], UnauthorizedAccessException
+    + FullyQualifiedErrorId : System.UnauthorizedAccessException,Microsoft.PowerShell.Commands.SetExecutionPolicy
+   Command
+```
+In order to change the execution policy, we will need to reopen PowerShell as an Administrator. The `Set-ExecutionPolicy` command will ask to verify that you really want to change the execution policy. Go ahead and select `Y` for yes, then go ahead and close and reopen your Powershell window.
 
 
 
