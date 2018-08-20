@@ -18,6 +18,8 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 7. Modules and Functions
 8. //TODO
 
+1. [ Description. ](#desc)
+2. [ Usage tips. ](#usage)
 
 # Chapter #1 - Intro
 
@@ -415,6 +417,12 @@ ToString                  ScriptMethod  System.Object ToString();
 Suddenly, you can see that underneath the hood PowerShell is formatting any objects in the Pipeline that are of the ServiceController type and creating a table with three columns: Status, Name, and DisplayName. But what if the type you are dealing with doesn’t have an entry in that file, or any other format file for that matter? Well then, it’s quite simple actually. If the object coming out of the pipeline has 5 or more properties:
 > PowerShell displays all of the object’s properties in a list; if it has less than 5 properties, it displays them in a table.
 
+## Feature #15 - Formatting Your Data
+
+## Feature #16 - Filtering and Comparing
+
+## Feature #17 - Pause Results On Screen
+
 ## Feature #15 - Get enhanced info by using Pipe Line
 
 Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
@@ -534,5 +542,24 @@ In order to change the execution policy, we will need to reopen PowerShell as an
 
 
 
+## Feature # - PowerShell History
 
+## Feature # - Sending Email With Send-MailMessage (Gmail example)
+https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
 
+## Feature # - How to zip up files using .NET and Add-Type
+https://www.pdq.com/blog/powershell-zip-up-files-using-.net-and-add-type/
+
+## Feature # - Get CPU Usage for a Process Using Get-Counter
+https://www.pdq.com/blog/powershell-get-cpu-usage-for-a-process-using-get-counter/
+
+## Feature # - Create Shortcuts on User Desktops using Powershell
+https://www.pdq.com/blog/pdq-deploy-and-powershell/
+
+<a name="desc"></a>
+## 1. Description
+
+sometext
+
+<a name="usage"></a>
+## 2. Usage tips
