@@ -413,9 +413,26 @@ Let's see what we done in **Example #22**:
 * `Format-Table` - view output in table style, for this type if will be `Format-List` default.
 * `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
 
+# Chapter #6 - First scripts
 
+## Feature #14 - Script policies
 
+Let's create  our first script in current directory. As code we will use simple `Write-Host` to display static text as output in our powershell window
 
+#### Example #23
+```powershell
+> echo Write-Host "Script, World!" > First Script.ps1
+> ls
+
+    Directory: powershell-live-talks
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       20/08/2018     10:44                .vscode
+-a----       20/08/2018     14:46             58 First Script.ps1
+-a----       16/08/2018     11:48            106 Get-ServiceStatus.ps1
+-a----       20/08/2018     14:23          19881 README.md
+```
 
 
 
