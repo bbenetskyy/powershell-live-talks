@@ -5,6 +5,10 @@ PowerShell Quick Start into Scripting
 ## [PowerShell Scripting](https://docs.microsoft.com/en-us/powershell/scripting/powershell-scripting?view=powershell-5.1)
 ## [Windows Powershell](https://docs.microsoft.com/en-us/powershell/windows/get-started?view=win10-ps)
 
+https://kevinmarquette.github.io/2017-04-10-Powershell-exceptions-everything-you-ever-wanted-to-know/
+
+https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-in-powershell/
+
 # Agenda
 1. Intro
 2. Short intro to PowerShell
@@ -14,8 +18,6 @@ PowerShell Quick Start into Scripting
 7. Modules and Functions
 8. //TODO
 
-
-https://kevinmarquette.github.io/2017-04-10-Powershell-exceptions-everything-you-ever-wanted-to-know/
 
 # Chapter #1 - Intro
 
@@ -71,7 +73,7 @@ SerializationVersion           1.1.0.1
 ```
 ## Feature #2 - basic command structure.
 
-Windows PowerShell commands have the following generic structure: `Verb-prefix_singular_noun`
+> Windows PowerShell commands have the following generic structure: `Verb-prefix_singular_noun`
 
 The various Microsoft product teams use command prefixes a bit inconsistently, but using command prefixes is definitely considered best practice.
 
@@ -147,7 +149,7 @@ Stopped  VSStandardColle... Visual Studio Standard Collector Se...
 
 ## Feature #5 - break current command execution
 
-_Errors will be reviewed later on chapter #7_
+> Errors will be reviewed later on chapter #7
 
 If we run some large command and in meantime think that we don't need it or we make some mistake during typing command. We could break current execution wth command `Ctrl+C`(same as in CMD)
 #### Example #6
@@ -356,8 +358,8 @@ As we could see default it accept `Name` and `InputObject` accept values from pi
 In help you could saw that `-InputObject <PSObject>` and this converts to `System.Object` but `Accept pipeline input?  True (ByValue)` have specified that this will be accepted by input value.
 Also this was described at help with more details.
 
-#### Example #20
 If we would like to get all properties of `Get-Disk` command with Pipe Line we could simply filter only needed for use properties
+#### Example #20
 ```powershell
 > Get-Disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}
 Name                 MemberType Definition
@@ -370,20 +372,20 @@ FriendlyName         Property   string FriendlyName {get;}
 Guid                 Property   string Guid {get;}
 ...
 ```
+And if we want to run it with then we should run:
+#### Example #21
+```powershell
+> Get-Disk |   select -Property *
+```
+## Feature #14 - Get enhanced info by using Pipe Line
 
-Get-Disk -PipelineVariable $disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}| Select -Property Name -PipelineVariable $allNames | $disk | select -ExpandProperty $allNames
+Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
 
-get-disk
-
-get all parameters
-get names
-
-https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-in-powershell/
-
+#### Example #22
 ```powershell
 > Get-Process -Name a* -PipelineVariable  Proc |  ForEach {
    Get-WmiObject  -Class Win32_Service  -ErrorAction SilentlyContinue  -Filter "ProcessID='$($Proc.Id)'" -PipelineVariable  Service |  ForEach {
-       [pscustomobject]@{
+       [PSCustomObject]@{
             ProcessName = $Proc.Name
             PID =  $Proc.Id
             ServiceName = $Service.Name
@@ -392,4 +394,35 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
         }
    }
  }  | Format-Table  -AutoSize
+
+ProcessName           PID ServiceName                 ServiceDisplayName           StartName
+-----------           --- -----------                 ------------------           ---------
+AdaptiveSleepService 9760 AdaptiveSleepService        AdaptiveSleepService         LocalSystem
+armsvc               3440 AdobeARMservice             Adobe Acrobat Update Service LocalSystem
+atiesrxx             1996 AMD External Events Utility AMD External Events Utility  LocalSystem
 ```
+Let's see what we done in **Example #22**:
+* `Get-Process -Name a*` - return all running processes which name starts from `a` without checking for case.
+* `-PipelineVariable  Proc` - initialize variable which will exist in next pipe line parts but not outside of command
+* `ForEach` - query for each element from left part of pipe line, values will be available under `$Proc` variable
+* `Get-WmiObject` - gets instances of WMI classes or information about the available classes.
+* `-Class Win32_Service` - specifies the name of a WMI class. When this parameter is used, the cmdlet retrieves instances of the WMI class. It could be also `Win32_Service`, `Win32_Process`,`Win32_Bios` and other
+* `-ErrorAction SilentlyContinue` - 3num. Determines how the cmdlet responds when an error occurs. Values are: `Continue` [default], `Stop`, `SilentlyContinue`, `Inquire`
+* `-Filter "ProcessID='$($Proc.Id)'"` - Specifies a `Where` clause to use as a filter. Uses the syntax of the WMI Query Language (WQL).
+* `PSCustomObject` - this is a very simple way to create structured data. For more, please read this great article - [Everything you wanted to know about PSCustomObject](https://kevinmarquette.github.io/2016-10-28-powershell-everything-you-wanted-to-know-about-pscustomobject/)
+* `Format-Table` - view output in table style, for this type if will be `Format-List` default.
+* `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
