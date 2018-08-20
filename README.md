@@ -354,6 +354,22 @@ As we could see default it accept `Name` and `InputObject` accept values from pi
 In help you could saw that `-InputObject <PSObject>` and this converts to `System.Object` but `Accept pipeline input?  True (ByValue)` have specified that this will be accepted by input value.
 Also this was described at help with more details.
 
+#### Example #20
+If we would like to get all properties of `Get-Disk` command with Pipe Line we could simply filter only needed for use properties
+```powershell
+> Get-Disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}
+Name                 MemberType Definition
+----                 ---------- ----------
+AdapterSerialNumber  Property   string AdapterSerialNumber {get;}
+AllocatedSize        Property   uint64 AllocatedSize {get;}
+BootFromDisk         Property   bool BootFromDisk {get;}
+FirmwareVersion      Property   string FirmwareVersion {get;}
+FriendlyName         Property   string FriendlyName {get;}
+Guid                 Property   string Guid {get;}
+...
+```
+
+Get-Disk -PipelineVariable $disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}| Select -Property Name -PipelineVariable $allNames | $disk | select -ExpandProperty $allNames
 
 get-disk
 
