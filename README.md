@@ -419,8 +419,174 @@ Suddenly, you can see that underneath the hood PowerShell is formatting any obje
 
 ## Feature #15 - Formatting Your Data
 
-## Feature #16 - Filtering and Comparing
+If you are not happy with the default formatting of an object or type, you can roll your own formatting. There are three cmdlets you need to know to do this:
+* `Format-List`
+* `Format-Table`
+* `Format-Wide`
 
+`Format-Wide` simply takes a collection of objects and displays a single property of each object. By default, it will look for a name property; if your objects don’t contain a name property, it will use the first property of the object once the properties have been sorted alphabetically.
+#### Example #23
+```powershell
+> Get-Service -Name a*  | Format-Wide
+
+
+AdaptiveSleepService              AdobeARMservice
+AdobeFlashPlayerUpdateSvc         AJRouter
+ALG                               AMD External Events Utility
+AppIDSvc                          Appinfo
+AppMgmt                           AppReadiness
+AppVClient                        AppXSvc
+aspnet_state                      AssignedAccessManagerSvc
+AudioEndpointBuilder              Audiosrv
+AxInstSV
+```
+As you can see, it also defaults to two columns, although you can specify both which property you want to use, as well as how many columns you want to be displayed.
+#### Example #24
+```powershell
+> Get-Service -Name a*  | Format-Wide  -Property DisplayName -Column 6
+
+
+Adaptive... Adobe A... Adobe F... AllJoyn... Applica... AMD Ext...
+Applicat... Applica... Applica... App Rea... Microso... AppX De...
+ASP.NET ... Assigne... Windows... Windows... ActiveX...
+```
+If something is formatted as a table by default, you can always switch it to list view by using the `Format-List` cmdlet. Let’s take a look at the output of the `Get-Process` cmdlet.
+#### Example #25
+```powershell
+> gps
+
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessN
+                                                          ame
+-------  ------    -----      -----     ------     --  -- --------
+    143       8     1916       6652             14024   0 Adapt...
+    644      37    28636      32528      14.34   4716   1 Appli...
+    149       9     1624       6296              3640   0 armsvc
+    230      12     2800      10196              6160   1 atieclxx
+    128       8     1632       4948              2084   0 atiesrxx
+    252      15    12564      16932      95.47   6352   0 audiodg
+    181       9     7244       6712       0.16   1996   1 bash
+    182       9     7184       6712       0.14  16564   1 bash
+   1034     134   102124      93360      86.73  18236   1 Brady...
+   1205     173   155864     132668   3,843.92  16040   1 Brady...
+```
+This tabular view actually suits this kind of information very well, but let’s pretend we want to view it in list form. All we really have to do is pipe it to `Format-List`.
+#### Example #26
+```powershell
+> Get-Process | Format-List
+
+Id      : 14024
+Handles : 143
+CPU     :
+SI      : 0
+Name    : AdaptiveSleepService
+
+Id      : 4716
+Handles : 644
+CPU     : 14.34375
+SI      : 1
+Name    : ApplicationFrameHost
+
+Id      : 3640
+Handles : 149
+CPU     :
+SI      : 0
+Name    : armsvc
+```
+As you can see there are only four items displayed in the list by default. To view all the properties of the object, you can use a wildcard character.
+#### Example #27
+```powershell
+> Get-Process | Format-List –Property *
+
+Name                       : AdaptiveSleepService
+Id                         : 14024
+PriorityClass              :
+FileVersion                :
+HandleCount                : 143
+WorkingSet                 : 6537216
+PagedMemorySize            : 1961984
+PrivateMemorySize          : 1961984
+VirtualMemorySize          : 103632896
+TotalProcessorTime         :
+SI                         : 0
+Handles                    : 143
+VM                         : 103632896
+WS                         : 6537216
+PM                         : 1961984
+NPM                        : 7832
+```
+Alternatively, you can select just the properties you want.
+#### Example #28
+```powershell
+> Get-Process | Format-List –Property name,id
+
+Name : AdaptiveSleepService
+Id   : 14024
+
+Name : ApplicationFrameHost
+Id   : 4716
+
+Name : armsvc
+Id   : 3640
+
+Name : atieclxx
+Id   : 6160
+
+Name : atiesrxx
+Id   : 2084
+```
+`Format-Table`, on the other hand, takes data and turns it into a table. Since our data from `Get-Process` is already in the form of a table, we can use it to easily choose properties we want displayed in the table. I used the AutoSize parameter to make all the data fit onto a single screen.
+#### Example #29
+```powershell
+> Get-Process | Format-Table name,id –AutoSize
+
+Name                                                 Id
+----                                                 --
+AdaptiveSleepService                              14024
+ApplicationFrameHost                               4716
+armsvc                                             3640
+atieclxx                                           6160
+atiesrxx                                           2084
+audiodg                                            6352
+bash                                               1996
+bash                                              16564
+Brady.Tolling.DataServiceHost                     18236
+Brady.Tolling.ExplorerHost                        16040
+```
+## Feature #16 - Filtering and Comparing
+One of the best things about using an object-based pipeline is that you can filter objects out of the pipeline at any stage using the `Where-Object` cmdlet.
+#### Example #30
+```powershell
+> Get-Service | Where-Object {$_.Status -eq “Running”}
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  AdaptiveSleepSe... AdaptiveSleepService
+Running  AdobeARMservice    Adobe Acrobat Update Service
+Running  AMD External Ev... AMD External Events Utility
+Running  Appinfo            Application Information
+Running  AudioEndpointBu... Windows Audio Endpoint Builder
+Running  Audiosrv           Windows Audio
+Running  BDESVC             BitLocker Drive Encryption Service
+Running  BFE                Base Filtering Engine
+Running  BITS               Background Intelligent Transfer Ser...
+Running  BrokerInfrastru... Background Tasks Infrastructure Ser...
+```
+Using where object is actually very simple.
+
+`$_` represents the current pipeline object, from which you can choose a property that you want to filter on. Here, were are only keeping objects where the `Status` property equals `Running`. There are a few comparison operators you can use in the filtering script block:
+* `eq` (Equal To)
+* `neq` (Not Equal To)
+* `gt` (Greater Than)
+* `ge` (Greater Than or Equal To)
+* `lt` (Less Than)
+* `le` (Less Than or Equal To)
+* `like` (Wildcard String Match)
+
+A full list and more information can be viewed in the `about_comparison` conceptual help file, however it does take some time getting used to the `Where-Object` syntax. 
+#### Example #31
+```powershell
+> help about_comparison
+```
 ## Feature #17 - Pause Results On Screen
 
 ## Feature #15 - Get enhanced info by using Pipe Line
