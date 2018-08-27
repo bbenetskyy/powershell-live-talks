@@ -824,8 +824,138 @@ At line:1 char:1
 ```
 In order to change the execution policy, we will need to reopen PowerShell as an Administrator. The `Set-ExecutionPolicy` command will ask to verify that you really want to change the execution policy. Go ahead and select `Y` for yes, then go ahead and close and reopen your Powershell window.
 
+## Feature # - Common Parameter in Powershell
 
+The example below will use `Get-Service` to get a list of all of the services on my computer and then sort that list by the `State` property. What we will see this time will not be an accurate representation the output that we were expecting.
+#### Example #
+```powershell
+> Get-Service -PipelineVariable  Service |  Sort-Object -Property  State |  ForEach {
+>>
+>>   [pscustomobject]@{
+>>
+>>   Name =  $Service.Name
+>>
+>>   DisplayName =  $_.DisplayName
+>>
+>>   }
+>>
+>> }
 
+Name          DisplayName
+----          -----------
+XboxNetApiSvc Software Protection
+XboxNetApiSvc SQL Server Agent (SQLEXPRESS)
+XboxNetApiSvc Windows Perception Service
+XboxNetApiSvc Print Spooler
+XboxNetApiSvc SQL Server VSS Writer
+XboxNetApiSvc SSDP Discovery
+...
+```
+The last item in the pipeline is saved to the pipeline variable due to the aggregation that is occurring with `Sort-Object`. This is happening because all of the data is being held up by `Get-Service` before being sent to `Sort-Object` to be sorted based on the given sorting parameters. Because of this, the pipeline variable no longer shows all of the output and isn't a good source of data to be used later on in other commands in the pipeline.
+
+Building a function that allows you to make use of this parameter is easier than you think! The key component when you build your function or script is to include the cmdlet binding attribute that defines your function as an advanced function and opens up this parameter (as well as other common parameters). You can quickly verify this by looking at the command syntax.
+
+#### Without cmdletbinding:
+#### Example #
+```powershell
+> Function Test-Function  {
+>>
+>>   Param (
+>>
+>>   [string[]]$Data
+>>
+>>   )
+>>
+>> }
+> Get-Command Test-Function  -Syntax
+
+Test-Function [[-Data] <string[]>]
+```
+####  With cmdletbinding:
+#### Example #
+```powershell
+> Function Test-Function  {
+>>
+>>   [cmdletbinding()]
+>>
+>>   Param (
+>>
+>>   [string[]]$Data
+>>
+>>   )
+>>
+>>   }
+> Get-Command Test-Function  -Syntax
+
+Test-Function [[-Data] <string[]>] [<CommonParameters>]
+```
+You can see that the `CommandParameter` label is used on the function that includes the cmdlet binding attribute which means that we have our pipeline variable enabled for use.
+
+Once you have done this then you can begin building out your function. The process to do this is a little quirky, for a lack of better words. I found that supporting the pipeline in the function using more traditional means like the Process block only seems to send the first item in the pipeline to the variable as shown below.
+
+#### Example #
+```powershell
+> Function Test-Function  {
+>>
+>>   [cmdletbinding()]
+>>
+>>   Param (
+>>
+>>   [parameter(ValueFromPipeline=$True)]
+>>
+>>   [object[]]$Data
+>>
+>>   )
+>>
+>>   Process  {
+>>
+>>   ForEach  ($Item in  $Data) {
+>>
+>>   $Item
+>>
+>>   }
+>>
+>>   }
+>>
+>> }
+>> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
+1
+```
+This does work as expected when using the named parameter
+#### Example #
+```powershell
+> Test-Function -Data (1..5) -PipelineVariable  t | ForEach {$t}
+1
+2
+3
+4
+5
+```
+So how in the world can we make this support pipeline input? Well, we can make use of an automatic variable called `$Input` which takes in all of the pipeline input and treats it like a collection. It can even be placed in the `Begin` block and it will have all of the pipeline data! This variable does have a different meaning when you are not supporting pipeline input and another catch is that you cannot have a Process block with your pipeline support because it then becomes the single item in the Process block (like `$_` and `$PSItem`).
+#### Example #
+```powershell
+> Function Test-Function  {
+>>
+>>   [cmdletbinding()]
+>>
+>>   Param (
+>>
+>>   [parameter(ValueFromPipeline=$True)]
+>>
+>>   [object[]]$Data
+>>
+>>   )
+>>
+>>   $input
+>>
+>> }
+PS C:\Users\bbenetskyi> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
+1
+2
+3
+4
+5
+```
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
 https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
