@@ -51,10 +51,10 @@ Or save into file and import for special folder:
 ```
 # Chapter #2 - Short intro to PowerShell
 
- ## Feature #1 - auto completion. 
+ ## Feature # - auto completion. 
  Works by `Tab` key, list one by one possible solutions.
 
-#### Example #1
+#### Example #
 ```powershell
 > $PSVersionTable
 
@@ -69,11 +69,11 @@ WSManStackVersion             ` 3.0
 PSRemotingProtocolVersion      2.3
 SerializationVersion           1.1.0.1
 ```
-#### Example #2
+#### Example #
 ```powershell
 > cd 'some path search with tab'
 ```
-## Feature #2 - basic command structure.
+## Feature # - basic command structure.
 
 > Windows PowerShell commands have the following generic structure: `Verb-prefix_singular_noun`
 
@@ -81,7 +81,7 @@ The various Microsoft product teams use command prefixes a bit inconsistently, b
 
 The singular-noun part of a PowerShell command makes it easier to guess at the correct command. For example, have you ever asked yourself whether the correct command name is `Get-Service` (singular) or `Get-Services` (plural)? You don’t need to worry anymore, because the best-practice guideline is to make all nouns singular.
 
-#### Example #3
+#### Example #
 ```powershell
 > Get-Service
 
@@ -96,11 +96,11 @@ Running  AMD External Ev... AMD External Events Utility
 ...
 ```
 
-## Feature #3 - regex in search
+## Feature # - regex in search
 
 You could use in search `*` to accept any count of characters or `?` to accept one only. Also other Regex elements are available but most frequently used this two.
 
-#### Example #4
+#### Example #
 ```powershell
 >  Get-Service -Name v*
 
@@ -134,9 +134,9 @@ Stopped  vmicvmsession      Hyper-V PowerShell Direct Service
 Stopped  vmicvss            Hyper-V Volume Shadow Copy Requestor
 ```
 
-## Feature #4 - properties and methods
+## Feature # - properties and methods
 
-#### Example #5
+#### Example #
 At powershell all returned items is objects an
 ```powershell
 >  Get-Service -Name v* -Exclude vm*
@@ -149,22 +149,22 @@ Stopped  VSS                Volume Shadow Copy
 Stopped  VSStandardColle... Visual Studio Standard Collector Se...
 ```
 
-## Feature #5 - break current command execution
+## Feature # - break current command execution
 
 > Errors will be reviewed later on chapter #7
 
 If we run some large command and in meantime think that we don't need it or we make some mistake during typing command. We could break current execution wth command `Ctrl+C`(same as in CMD)
-#### Example #6
+#### Example #
 ```powershell
 > while($true){ Get-Alias } 
 #...
 Ctrl+C
 >
 ```
-## Feature #6 - Checking possible actions
+## Feature # - Checking possible actions
 If we not sure if such command even exist we should try `Get-Command` for list all possible matches of searched command and ster it use `Get-Help` for detailed command description(_about it more at Chapter #3_)
 
-#### Example #7
+#### Example #
 ```powershell
 > Get-Command *member
 
@@ -182,7 +182,7 @@ Alias           gm -> Get-Member
 ```
 
 What about searching aliases for commands? We could use `Get-Member` or `gm` commands as well thanks for possibility of defining aliases. Also there a lot of predefined by system
-#### Example #8
+#### Example #
 ```powershell
 > Get-Alias gm
 
@@ -221,7 +221,7 @@ Alias           gm -> Get-Member
 The [`Get-Help`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-6) cmdlet displays information about PowerShell concepts and commands, including cmdlets, functions, CIM commands, workflows, providers, aliases and scripts.
 
 To get help for a PowerShell command, type `Get-Help` followed by the command name, such as: 
-#### Example #9
+#### Example #
 ```powershell
 > Get-Help Get-Process
 ```
@@ -235,29 +235,29 @@ In addition to Get-Help, you can also type help or man, which displays one scree
 `Get-Help` gets the help content that it displays from help files on your computer. Without the help files, `Get-Help` displays only basic information about commands. Some PowerShell modules come with help files. However, starting in Windows PowerShell 3.0, the modules that come with the Windows operating system do not include help files. To download or update the help files for a module in Windows PowerShell 3.0, use the `Update-Help` cmdlet.
 
 You can also view the help topics for PowerShell online in the Microsoft Docs. To get the online version of a help topic, use the Online parameter, such as:
-#### Example #10
+#### Example #
 ```powershell
  > Get-Help Get-Process -Online
 ```
 If you type `Get-Help` followed by the exact name of a help topic, or by a word unique to a help topic, `Get-Help` displays the topic contents. If you enter a word or word pattern that appears in several help topic titles, `Get-Help` displays a list of the matching titles. If you enter a word that does not appear in any help topic titles, `Get-Help` displays a list of topics that include that word in their contents.
-#### Example #11
+#### Example #
 ```powershell
 > Get-Help Format-Table
 > Get-Help -Name Format-Table
 > Format-Table -?
 ```
 These commands display same basic information about the `Format-Table` cmdlet.
-## Feature #7 - Display basic information one page at a time
+## Feature # - Display basic information one page at a time
 These commands display basic information about the `Format-Table` cmdlet one page at a time:
-#### Example #12
+#### Example #
 ```powershell
 > Get-Help Format-Table | Out-Host -Paging
 > help Format-Table
 > man Format-Table
 ```
-## Feature #8 - Display more information for a cmdlet
+## Feature # - Display more information for a cmdlet
 These commands display more information about the `Format-Table` cmdlet than usual:
-#### Example #13
+#### Example #
 ```powershell
 > Get-Help Format-Table -Detailed
 > Get-Help Format-Table -Full
@@ -267,9 +267,9 @@ The `Detailed` parameter displays the detailed view of the help topic, which inc
 The `Full` parameter displays the full view of the help topic, which includes parameter descriptions, examples, input and output object types, and additional notes.
 
 **The `Detailed` and `Full` parameters are effective only for the commands whose help files are installed on the computer.**
-## Feature #9 - Display selected parts of a cmdlet by using parameters
+## Feature # - Display selected parts of a cmdlet by using parameters
 These commands display selected parts of the `Format-Table` cmdlet help
-#### Example #14
+#### Example #
 ```powershell
 > Get-Help Format-Table -Examples
 > Get-Help Format-Table -Parameter GroupBy
@@ -278,45 +278,45 @@ These commands display selected parts of the `Format-Table` cmdlet help
 The `Examples` parameter displays only the `NAME`, `SYNOPSIS`, and all Examples. You can not specify an `Example` number because the `Examples` parameter is a `switch parameter`.
 
 The `Parameter` parameter displays only the descriptions of the specified parameters. If you specify only the wildcard character (`*`), it displays the descriptions of all parameters.
-## Feature #10 - search for a word in particular cmdlet help topic
+## Feature # - search for a word in particular cmdlet help topic
 This example shows how to search for a word in particular cmdlet help topic. This command searches for the word Clixml in the full version of the help topic for the Add-Member cmdled.
 Because the `Get-Help` cmdlet generates a `MamlCommandHelpInfo` object, not a `string`, you have to use a cmdlet that transforms the help topic content into a `string`, such as `Out-String` or `Out-File`.
-#### Example #15
+#### Example #
 ```powershell
 > Get-Help Add-Member -Full | Out-String -Stream | Select-String -Pattern Clixml
 ```
-## Feature #11 - Display help for a script
+## Feature # - Display help for a script
 We could show information also for a user scripts. Even with examples, as it will be shown in _Chapter #7_ 
-#### Example #16
+#### Example #
 ```powershell
 > Get-Help .\Get-ServiceStatus.ps1
 ```
 
 # Chapter #4 - Objects and Pipe lines
 
-## Feature #12 - PowerShell return objects
+## Feature # - PowerShell return objects
 When we call any command we mostly get as answer object with some type. When powershell try to return object, it's map it into UI table with command `Format-Table` with default properties for it.
-#### Example #17 
+#### Example #
 ```powershell
 > Get-Help get-v*
 > Get-Help get-v* | Format-Table
 ```
 We could see what returned from previous side of pipe line with `Get-Member`(`gm`).
 
-## Feature #13 - PowerShell Pile lines
+## Feature # - PowerShell Pile lines
 
 There are plenty of Linux shells with a pipeline, allowing you to send the text that one command outputs as input to the next command in the pipeline. PowerShell takes this to the next level by allowing you to take the objects that one cmdlet outputs and pass them as input to the next cmdlet in the pipeline.
 
 `Get-Member` accept inputs via argument or via pipe line. In such way pipe line just move output with saving his type. 
 
-#### Example #18
+#### Example #
 ```powershell
 >Get-Member -InputObject (Get-Help get-v*)
 >Get-Help get-v* | Get-Member
 ```
 As you could saw these commands returns different values but work on the same input models. This works because `Get-Member` have different options to accepting input argument. To ensure of that we should check `Get-Help`
 
-#### Example #19
+#### Example #
 ```powershell
 > Get-Help Get-Member -Parameter Name
 
@@ -363,7 +363,7 @@ In help you could saw that `-InputObject <PSObject>` and this converts to `Syste
 Also this was described at help with more details.
 
 If we would like to get all properties of `Get-Disk` command with Pipe Line we could simply filter only needed for use properties
-#### Example #20
+#### Example #
 ```powershell
 > Get-Disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}
 Name                 MemberType Definition
@@ -377,12 +377,12 @@ Guid                 Property   string Guid {get;}
 ...
 ```
 And if we want to run with it, then we should run:
-#### Example #21
+#### Example #
 ```powershell
 > Get-Disk |   select -Property *
 ```
 
-## Feature #14 - Default Formatting
+## Feature # - Default Formatting
 When I first started out with PowerShell, I thought everything was magic, but the truth is it just takes a little bit of time to understand what is going on underneath the hood. The same is true for the PowerShell formatting system. In fact, if you run the Get-Service cmdlet, the output generated only shows you 3 properties: `Status`, `Name` and `DisplayName`.
 
 
@@ -390,7 +390,7 @@ But if you pipe `Get-Service` to `Get-Member`, you see that the `ServiceControll
 
 
 The answer lies within a hidden file that defines how most of the built-in cmdlets display their output. To get an understanding, type the following into the shell and hit enter.
-#### Example #22
+#### Example #
 ```powershell
 > Get-Service -Name amd*
 Status   Name               DisplayName
@@ -417,7 +417,7 @@ ToString                  ScriptMethod  System.Object ToString();
 Suddenly, you can see that underneath the hood PowerShell is formatting any objects in the Pipeline that are of the ServiceController type and creating a table with three columns: Status, Name, and DisplayName. But what if the type you are dealing with doesn’t have an entry in that file, or any other format file for that matter? Well then, it’s quite simple actually. If the object coming out of the pipeline has 5 or more properties:
 > PowerShell displays all of the object’s properties in a list; if it has less than 5 properties, it displays them in a table.
 
-## Feature #15 - Formatting Your Data
+## Feature # - Formatting Your Data
 
 If you are not happy with the default formatting of an object or type, you can roll your own formatting. There are three cmdlets you need to know to do this:
 * `Format-List`
@@ -425,7 +425,7 @@ If you are not happy with the default formatting of an object or type, you can r
 * `Format-Wide`
 
 `Format-Wide` simply takes a collection of objects and displays a single property of each object. By default, it will look for a name property; if your objects don’t contain a name property, it will use the first property of the object once the properties have been sorted alphabetically.
-#### Example #23
+#### Example #
 ```powershell
 > Get-Service -Name a*  | Format-Wide
 
@@ -441,7 +441,7 @@ AudioEndpointBuilder              Audiosrv
 AxInstSV
 ```
 As you can see, it also defaults to two columns, although you can specify both which property you want to use, as well as how many columns you want to be displayed.
-#### Example #24
+#### Example #
 ```powershell
 > Get-Service -Name a*  | Format-Wide  -Property DisplayName -Column 6
 
@@ -451,7 +451,7 @@ Applicat... Applica... Applica... App Rea... Microso... AppX De...
 ASP.NET ... Assigne... Windows... Windows... ActiveX...
 ```
 If something is formatted as a table by default, you can always switch it to list view by using the `Format-List` cmdlet. Let’s take a look at the output of the `Get-Process` cmdlet.
-#### Example #25
+#### Example #
 ```powershell
 > gps
 
@@ -470,7 +470,7 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessN
    1205     173   155864     132668   3,843.92  16040   1 Brady...
 ```
 This tabular view actually suits this kind of information very well, but let’s pretend we want to view it in list form. All we really have to do is pipe it to `Format-List`.
-#### Example #26
+#### Example #
 ```powershell
 > Get-Process | Format-List
 
@@ -493,7 +493,7 @@ SI      : 0
 Name    : armsvc
 ```
 As you can see there are only four items displayed in the list by default. To view all the properties of the object, you can use a wildcard character.
-#### Example #27
+#### Example #
 ```powershell
 > Get-Process | Format-List –Property *
 
@@ -515,7 +515,7 @@ PM                         : 1961984
 NPM                        : 7832
 ```
 Alternatively, you can select just the properties you want.
-#### Example #28
+#### Example #
 ```powershell
 > Get-Process | Format-List –Property name,id
 
@@ -535,7 +535,7 @@ Name : atiesrxx
 Id   : 2084
 ```
 `Format-Table`, on the other hand, takes data and turns it into a table. Since our data from `Get-Process` is already in the form of a table, we can use it to easily choose properties we want displayed in the table. I used the AutoSize parameter to make all the data fit onto a single screen.
-#### Example #29
+#### Example #
 ```powershell
 > Get-Process | Format-Table name,id –AutoSize
 
@@ -552,9 +552,9 @@ bash                                              16564
 Brady.Tolling.DataServiceHost                     18236
 Brady.Tolling.ExplorerHost                        16040
 ```
-## Feature #16 - Filtering and Comparing
+## Feature # - Filtering and Comparing
 One of the best things about using an object-based pipeline is that you can filter objects out of the pipeline at any stage using the `Where-Object` cmdlet.
-#### Example #30
+#### Example #
 ```powershell
 > Get-Service | Where-Object {$_.Status -eq “Running”}
 
@@ -583,13 +583,13 @@ Using where object is actually very simple.
 * `like` (Wildcard String Match)
 
 A full list and more information can be viewed in the `about_comparison` conceptual help file, however it does take some time getting used to the `Where-Object` syntax. 
-#### Example #31
+#### Example #
 ```powershell
 > help about_comparison
 ```
-## Feature #17 - Display system processes one page at a time
+## Feature # - Display system processes one page at a time
 The `Out-Host` cmdlet sends output to the PowerShell host for display. The host displays the output at the command line. Because `Out-Host` is the default, you do not have to specify it unless you want to use its parameters to change the display.
-#### Example #32
+#### Example #
 ```powershell
 > Get-Process | Out-Host -Paging
 
@@ -609,11 +609,11 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
     214      20     5064       9864              3744   0 BuildService
 ```
 This command displays the processes on the system one page at a time. It uses the `Get-Process` cmdlet to get the processes on the system. The pipeline operator sends the results to `Out-Host` cmdlet, which displays them at the console. The `Paging` parameter displays one page of data at a time.
-## Feature #18 - Display session history
+## Feature # - Display session history
 Windows PowerShell itself keeps a history of the commands you’ve typed in the current PowerShell session. You can use several included cmdlets to view and work with your history.
 
 To view the history of commands you’ve typed, run the following cmdlet:
-#### Example #33
+#### Example #
 ```powershell
 > Get-History
 
@@ -625,14 +625,14 @@ To view the history of commands you’ve typed, run the following cmdlet:
    4 Get-Service -Name amd*  | Format-Wide
 ```
 You can search your history by piping the resulting output to the `Select-String` cmdlet and specifying the text you want to search for:    
-#### Example #34
+#### Example #
 ```powershell
 > Get-History |  Select-String -Pattern "Table"
 
 Get-Process | Format-Table name,id –AutoSize
 ```
 To view a more detailed command history that displays the execution status of each command along with its start and end times, run the following command:
-#### Example #35
+#### Example #
 ```powershell
 > Get-History | Format-List -Property *
 
@@ -650,15 +650,15 @@ StartExecutionTime : 25/08/2018 11:44:50
 EndExecutionTime   : 25/08/2018 11:44:51
 ```
 By default, the `Get-History` cmdlet only shows the **32** most recent history entries. If you want to view or search a larger number of history entries, use the `-Count` option to specify how many history entries PowerShell should show, like so:
-#### Example #36
+#### Example #
 ```powershell
 > Get-History -Count 1000
 > Get-History -Count 1000 | Select-String -Pattern "Table"
 > Get-History -Count 1000 | Format-List -Property *
 ```
-## Feature #19 - Run Commands From Your History
-To run a command from your history, use the following cmdlet, specifying the Id number of the history item as shown by the Get-History cmdlet:
-#### Example #37
+## Feature # - Run Commands From Your History
+To run a command from your history, use the following cmdlet, specifying the Id number of the history item as shown by the `Get-History` cmdlet. To run two commands from your history back to back, use `Invoke-History` twice on the same line, separated by a **semicolon**.
+#### Example #
 ```powershell
 > Invoke-History 1 ; Invoke-History 2
 Get-History
@@ -675,11 +675,44 @@ Get-History
    3 Get-History
    4 Get-History
 ```
-## Feature #15 - Get enhanced info by using Pipe Line
+
+## Feature # - Save and Import Your PowerShell History
+If you want to save the PowerShell command history for the current session so you can refer to it later, you can do so
+#### Example #
+```powershell
+> Get-History | Export-Clixml -Path .\history.xml
+```
+This exports your command history as a detailed XML file complete with **“StartExecutionTime”** and **“EndExecutionTime”** values for each command that tell you when the command was run and how long it took to complete.
+
+
+Once you’ve exported your PowerShell history to such an XML file, you (or anyone else you send the XML file to) can import it to another PowerShell session with the `Add-History` cmdlet:
+#### Example #
+```powershell
+> Add-History -InputObject (Import-Clixml .\history.xml)
+```
+If you run the `Get-History` cmdlet after importing such an XML file, you’ll see that the commands from the XML file were imported into your current PowerShell session’s history.
+## Feature # - Clear Your PowerShell History
+
+To clear the history of commands you’ve typed, run the following cmdlet:
+#### Example #
+```powershell
+> Clear-History
+```
+Note that the command line buffer is separate from the PowerShell history. So, even after you run `Clear-History`, you can continue to press the **up** and **down** arrow keys to scroll through commands you’ve typed. However, if you run `Get-History`, you’ll see that your PowerShell history is **in fact empty**.
+
+PowerShell doesn’t remember your history between sessions. To erase both command histories for the current session, all you have to do is close the PowerShell window.
+
+If you’d like to clear the PowerShell window after clearing the history, you can do it by running the `Clear` command:
+#### Example #
+```powershell
+> Clear
+```
+
+## Feature # - Get enhanced info by using Pipe Line
 
 Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
 
-#### Example #23
+#### Example #
 ```powershell
 > Get-Process -Name a* -PipelineVariable  Proc |  ForEach {
    Get-WmiObject  -Class Win32_Service  -ErrorAction SilentlyContinue  -Filter "ProcessID='$($Proc.Id)'" -PipelineVariable  Service |  ForEach {
@@ -711,9 +744,9 @@ Let's see what we done in **Example #22**:
 * `Format-Table` - view output in table style, for this type if will be `Format-List` default.
 * `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
 
-## Feature #16 - Truncating Parameters
+## Feature # - Truncating Parameters
 Windows PowerShell also allows you truncate parameter names up until the point where they become ambiguous, that is to say up until the point where PowerShell can no longer figure out which parameter you are talking about
-#### Example #24
+#### Example #
 ```powershell
 >  Get-Service -Name *sql* -ComputerName localhost
 Status   Name               DisplayName
@@ -737,11 +770,11 @@ Running  SQLWriter          SQL Server VSS Writer
 
 # Chapter #6 - First scripts
 
-## Feature #17 - Script policies
+## Feature # - Script policies
 
 Let's create  our first script in current directory. As code we will use simple `Write-Host` to display static text as output in our powershell window
 
-#### Example #25
+#### Example #
 ```powershell
 > echo 'Write-Host "Script, World!"' > 'First Script.ps1'
 > ls
@@ -772,7 +805,7 @@ In order to prevent malicious scripts from running on your system, PowerShell en
 
 We could check current execution policy by `Get-ExecutionPolicy` command and set by `Set-ExecutionPolicy`.
 
-#### Example #26
+#### Example #
 ```powershell
 > Get-ExecutionPolicy
 RemoteSigned
