@@ -824,6 +824,105 @@ At line:1 char:1
 ```
 In order to change the execution policy, we will need to reopen PowerShell as an Administrator. The `Set-ExecutionPolicy` command will ask to verify that you really want to change the execution policy. Go ahead and select `Y` for yes, then go ahead and close and reopen your Powershell window.
 
+## Feature # - Using Variables to Store Objects
+PowerShell works with objects. PowerShell lets you create variables, essentially named objects, to preserve output for later use. If you are used to working with variables in other shells remember that PowerShell variables are objects, not text.
+
+Variables are always specified with the initial character `$`, and can include any alphanumeric characters or the underscore in their names.
+
+You can create a variable by typing a valid variable name
+#### Example #
+```powershell
+> $cool
+```
+This returns no result because `$cool` does not have a value. You can create a variable and assign it a value in the same step. 
+> PowerShell only creates the variable if it does not exist; otherwise, it assigns the specified value to the existing variable. 
+
+To store your current location in the variable `$cool`, type:
+#### Example #
+```powershell
+> $cool = Get-Location
+> $cool
+
+Path
+----
+~\powershell-live-talks
+```
+You can use `Get-Member` to display information about the contents of variables. Piping `$cool` to `Get-Member` will show you that it is a `PathInfo` object, just like the output from `Get-Location`:
+#### Example #
+```powershell
+> $cool | Get-Member -MemberType Property
+
+
+   TypeName: System.Management.Automation.PathInfo
+
+Name         MemberType Definition
+----         ---------- ----------
+Drive        Property   System.Management.Automation.PSDriveInfo Drive {get;}
+Path         Property   string Path {get;}
+Provider     Property   System.Management.Automation.ProviderInfo Provider {get;}
+ProviderPath Property   string ProviderPath {get;}
+```
+PowerShell provides several commands to manipulate variables. You can see a complete listing in a readable form by typing:
+#### Example #
+```powershell
+> Get-Command -Noun Variable | Format-Table -Property Name,Definition -AutoSize -Wrap
+
+Name            Definition
+----            ----------
+Clear-Variable  ...
+Get-Variable    ...
+New-Variable    ...
+Remove-Variable ...
+Set-Variable    ...
+```
+In addition to the variables you create in your current PowerShell session, there are several system-defined variables. You can use the `Remove-Variable` cmdlet to clear out all of the variables which are not controlled by PowerShell. Type the following command to clear all variables:
+#### Example #
+```powershell
+> Remove-Variable -Name * -Force -ErrorAction SilentlyContinue
+```
+If you then run the Get-Variable cmdlet, you will see the remaining PowerShell variables. Since there is also a variable PowerShell drive, you can also display all PowerShell variables by typing:
+#### Example #
+```powershell
+>  Get-Variable
+
+Name                           Value
+----                           -----
+$                              $cool
+^                              $cool
+args                           {}
+...
+
+> Get-ChildItem variable:
+
+Name                           Value
+----                           -----
+$                              Get-Variable
+^                              Get-Variable
+args                           {}
+...
+```
+Although PowerShell is not Cmd.exe, it runs in a command shell environment and can use the same variables available in any environment in Windows. These variables are exposed through a drive named `env:`. You can view these variables by typing:
+#### Example #
+```powershell
+> Get-ChildItem env:
+
+Name                           Value
+----                           -----
+ALLUSERSPROFILE                C:\ProgramData
+APPDATA                        C:\Users\bbenetskyi\AppData\Roaming
+ChocolateyInstall              C:\ProgramData\chocolatey
+ChocolateyLastPathUpdate       Mon Jun 18 11:35:35 2018
+CommonProgramFiles             C:\Program Files\Common Files
+CommonProgramFiles(x86)        C:\Program Files (x86)\Common Files
+...
+```
+Although the standard variable cmdlets are not designed to work with env: variables, you can still use them by specifying the `env:` prefix. For example, to see the operating system root directory, you can use the command-shell `%SystemRoot%` variable from within PowerShell by typing:
+#### Example #
+```powershell
+> $env:SystemRoot
+C:\WINDOWS
+```
+You can also create and modify environment variables from within PowerShell. Environment variables accessed from Windows PowerShell conform to the normal rules for environment variables elsewhere in Windows.
 ## Feature # - Common Parameter in Powershell
 
 The example below will use `Get-Service` to get a list of all of the services on my computer and then sort that list by the `State` property. What we will see this time will not be an accurate representation the output that we were expecting.
