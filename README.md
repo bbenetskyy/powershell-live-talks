@@ -656,7 +656,25 @@ By default, the `Get-History` cmdlet only shows the **32** most recent history e
 > Get-History -Count 1000 | Select-String -Pattern "Table"
 > Get-History -Count 1000 | Format-List -Property *
 ```
+## Feature #19 - Run Commands From Your History
+To run a command from your history, use the following cmdlet, specifying the Id number of the history item as shown by the Get-History cmdlet:
+#### Example #37
+```powershell
+> Invoke-History 1 ; Invoke-History 2
+Get-History
 
+  Id CommandLine
+  -- -----------
+   1 Get-History
+   2 Get-History
+   3 Get-History
+   4 Get-History
+Get-History
+   1 Get-History
+   2 Get-History
+   3 Get-History
+   4 Get-History
+```
 ## Feature #15 - Get enhanced info by using Pipe Line
 
 Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
