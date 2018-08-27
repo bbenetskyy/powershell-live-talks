@@ -587,7 +587,75 @@ A full list and more information can be viewed in the `about_comparison` concept
 ```powershell
 > help about_comparison
 ```
-## Feature #17 - Pause Results On Screen
+## Feature #17 - Display system processes one page at a time
+The `Out-Host` cmdlet sends output to the PowerShell host for display. The host displays the output at the command line. Because `Out-Host` is the default, you do not have to specify it unless you want to use its parameters to change the display.
+#### Example #32
+```powershell
+> Get-Process | Out-Host -Paging
+
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    143       8     1916       6520             14024   0 AdaptiveSleepService
+    773      43    35348      43828      14.56   4716   1 ApplicationFrameHost
+    149       9     1624       6408              3640   0 armsvc
+    234      12     2832      10376              6160   1 atieclxx
+    128       8     1572       5164              2084   0 atiesrxx
+    259      16    12600      17036      95.69   6352   0 audiodg
+    181       9     7244       7152       0.16   1996   1 bash
+    182       9     7184       7156       0.14  16564   1 bash
+   1340     271   172932     138356     102.41  18236   1 Brady.Tolling.DataServiceHost
+   1549     333   232384     184892   4,403.28  16040   1 Brady.Tolling.ExplorerHost
+<SPACE> next page; <CR> next line; Q quit
+    214      20     5064       9864              3744   0 BuildService
+```
+This command displays the processes on the system one page at a time. It uses the `Get-Process` cmdlet to get the processes on the system. The pipeline operator sends the results to `Out-Host` cmdlet, which displays them at the console. The `Paging` parameter displays one page of data at a time.
+## Feature #18 - Display session history
+Windows PowerShell itself keeps a history of the commands you’ve typed in the current PowerShell session. You can use several included cmdlets to view and work with your history.
+
+To view the history of commands you’ve typed, run the following cmdlet:
+#### Example #33
+```powershell
+> Get-History
+
+  Id CommandLine
+  -- -----------
+   1 git fetch
+   2 git pull
+   3 Get-Service | Format-Wide
+   4 Get-Service -Name amd*  | Format-Wide
+```
+You can search your history by piping the resulting output to the `Select-String` cmdlet and specifying the text you want to search for:    
+#### Example #34
+```powershell
+> Get-History |  Select-String -Pattern "Table"
+
+Get-Process | Format-Table name,id –AutoSize
+```
+To view a more detailed command history that displays the execution status of each command along with its start and end times, run the following command:
+#### Example #35
+```powershell
+> Get-History | Format-List -Property *
+
+
+Id                 : 1
+CommandLine        : git fetch
+ExecutionStatus    : Completed
+StartExecutionTime : 25/08/2018 11:44:36
+EndExecutionTime   : 25/08/2018 11:44:37
+
+Id                 : 2
+CommandLine        : git pull
+ExecutionStatus    : Completed
+StartExecutionTime : 25/08/2018 11:44:50
+EndExecutionTime   : 25/08/2018 11:44:51
+```
+By default, the `Get-History` cmdlet only shows the **32** most recent history entries. If you want to view or search a larger number of history entries, use the `-Count` option to specify how many history entries PowerShell should show, like so:
+#### Example #36
+```powershell
+> Get-History -Count 1000
+> Get-History -Count 1000 | Select-String -Pattern "Table"
+> Get-History -Count 1000 | Format-List -Property *
+```
 
 ## Feature #15 - Get enhanced info by using Pipe Line
 
@@ -707,8 +775,6 @@ In order to change the execution policy, we will need to reopen PowerShell as an
 
 
 
-
-## Feature # - PowerShell History
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
 https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
