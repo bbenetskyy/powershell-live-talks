@@ -22,7 +22,7 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 ii .
 show-object  $x
 ```
-
+https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
 
 1. [ Description. ](#desc)
 2. [ Usage tips. ](#usage)
