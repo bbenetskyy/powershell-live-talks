@@ -18,6 +18,12 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 7. Modules and Functions
 8. //TODO
 
+```
+ii .
+show-object  $x
+```
+
+
 1. [ Description. ](#desc)
 2. [ Usage tips. ](#usage)
 
