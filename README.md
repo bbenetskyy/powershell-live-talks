@@ -929,6 +929,66 @@ Although the standard variable cmdlets are not designed to work with env: variab
 C:\WINDOWS
 ```
 You can also create and modify environment variables from within PowerShell. Environment variables accessed from Windows PowerShell conform to the normal rules for environment variables elsewhere in Windows.
+
+## Feature # - Variable Types
+
+You could define variables with spaces:
+#### Example #
+```powershell
+> $simpleVariable = '#1';
+> ${simple Variable} = '#2';
+> ${simple Variable}
+#2
+> $simpleVariable
+#1
+```
+Also there is a possibility to define strongly typed variable
+#### Example #
+```powershell
+> [String]$MyName="Jason"
+> [int]$Oops="Jason"
+Cannot convert value "Jason" to type "System.Int32". Error: "Input string was not in a correct format."
+At line:1 char:1
++ [int]$Oops="Jason"
++ ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : MetadataError: (:) [], ArgumentTransformationMetadataException
+    + FullyQualifiedErrorId : RuntimeException
+```
+Same as `Console.ReadLine` we could await for user input in PowerShell
+#### Example #
+```powershell
+> [string]$ComputerName=Read-host "Enter Computer Name"
+Enter Computer Name: WorkPC
+> Write-Output $ComputerName
+WorkPC
+```
+## Feature # - Quotation Markes
+
+In PowerShell we have inline variable resolving
+#### Example #
+```powershell
+> $name = 'Bohdan'
+> "We could print $name as name of $name"
+We could print Bohdan as name of Bohdan
+> 'We could print $name as name of $name'
+We could print $name as name of $name
+> "We could print `$name as name of $name"
+We could print $name as name of Bohdan
+```
+So as you could see both kinds of quotes are used to delimit string values. 
+> In general, you should use single quotes
+
+There are three instances when you might want to shift to double quotes. First, when you want to have variable names replaced with their contents: `"We could print $name as name of $name"`. That's a useful trick, since it saves you from having to concatenate strings in a lot of situations. 
+
+
+Second, when you need to delimit a string within the string - such as in a SQL query: `$query = "SELECT * FROM Worksops WHERE Name LIKE '%K8s%'"`. Using outer double quotes lets you use the single quotes needed within the string.
+
+
+Finally, when you need to use an escape character, since those aren't parsed within single quotes: `Get-Process | Export-CSV processes.tdf -delimiter "```t"`. That creates a tab-delimited file. 
+
+Apart from those three instances, it's generally considered a best practice to stick with single quotes. 
+
+
 ## Feature # - Common Parameter in Powershell
 
 The example below will use `Get-Service` to get a list of all of the services on my computer and then sort that list by the `State` property. What we will see this time will not be an accurate representation the output that we were expecting.
@@ -1061,6 +1121,8 @@ PS C:\Users\bbenetskyi> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
 4
 5
 ```
+
+## Feature #
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
 https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
