@@ -28,6 +28,8 @@ new-object -type FileResource
 
 ```
 
+[Jeff Hicks](https://github.com/jdhitsolutions)
+
 https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
 
 1. [ Description. ](#desc)
@@ -1108,7 +1110,30 @@ Workshops is sucks when 2 in one day
 ```
 Hope all is really clear)))
 
-
+## Feature - Foreach statement
+We already saw it. Not we will just look what forms it have:
+#### Example #
+```powershell
+> # Foreach - used often in our scripting for today
+> $services = Get-Service
+> ForEach ($service in $services) {
+>>   $service.Displayname
+>> }
+Adobe Flash Player Update Service
+AllJoyn Router Service
+Application Layer Gateway Service
+...
+> #For loop
+> For ($i=0;$i –lt 5;$i++) {
+>>  #do something
+>> }
+>
+> #Another way
+> 1..5 | ForEach-Object -process {
+>>     Start calc
+>> }
+```
+## Feature # - 
 
 ## Feature # - Common Parameter in Powershell
 
