@@ -429,6 +429,57 @@ ToString                  ScriptMethod  System.Object ToString();
 Suddenly, you can see that underneath the hood PowerShell is formatting any objects in the Pipeline that are of the ServiceController type and creating a table with three columns: Status, Name, and DisplayName. But what if the type you are dealing with doesn’t have an entry in that file, or any other format file for that matter? Well then, it’s quite simple actually. If the object coming out of the pipeline has 5 or more properties:
 > PowerShell displays all of the object’s properties in a list; if it has less than 5 properties, it displays them in a table.
 
+## Feature # - Works with object
+
+Let's select one of services. Best Windows service for test is `bits` - Background Intelligent Transfer Service. Let's get that service to variable, check status, run some functions from `Get-Member`.
+
+#### Example #
+```powershell
+> $Service=Get-Service -Name bits
+> $Service | GM
+
+   TypeName: System.ServiceProcess.ServiceController
+
+Name                      MemberType    Definition
+----                      ----------    ----------
+Name                      AliasProperty Name = ServiceName
+Start                     Method        void Start(), void Start(string[] args)
+Stop                      Method        void Stop()
+Status                    Property      System.ServiceProcess.ServiceControllerStatus Status {get;}
+
+> $Service.Status
+Stopped
+> $service.Start() #$service.Stop()
+> $Service.Status
+Stopped
+> $Service=Get-Service -Name bits
+> $Service.Status
+Running
+> $Msg="Service Name is $($service.name.ToUpper())"
+> $msg
+Service Name is BITS
+```
+Also we could work in quite same way with array of values in variable. More details will be with _Feature Variable Types_.
+#### Example #
+```powershell
+> $Services=Get-Service
+> $services[0]
+
+Status   Name               DisplayName
+------   ----               -----------
+Stopped  AdobeFlashPlaye... Adobe Flash Player Update Service
+
+
+> $services[0].Status
+Stopped
+> $Services[-1].Name
+YandexBrowserService
+> "Service Name is $($services[4].DisplayName)"
+Service Name is Application Information
+> "Service Name is $($services[4].name.ToUpper())"
+Service Name is APPINFO
+```
+
 ## Feature # - Formatting Your Data
 
 If you are not happy with the default formatting of an object or type, you can roll your own formatting. There are three cmdlets you need to know to do this:
@@ -968,7 +1019,7 @@ Enter Computer Name: WorkPC
 > Write-Output $ComputerName
 WorkPC
 ```
-## Feature # - Quotation Markes
+## Feature # - Quotation Marks
 
 In PowerShell we have inline variable resolving
 #### Example #
@@ -994,6 +1045,8 @@ Finally, when you need to use an escape character, since those aren't parsed wit
 
 Apart from those three instances, it's generally considered a best practice to stick with single quotes. 
 
+## Feature # - 
+ 
 
 ## Feature # - Common Parameter in Powershell
 
