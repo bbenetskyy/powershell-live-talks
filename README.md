@@ -1045,8 +1045,40 @@ Finally, when you need to use an escape character, since those aren't parsed wit
 
 Apart from those three instances, it's generally considered a best practice to stick with single quotes. 
 
-## Feature # - 
- 
+## Feature # - If/Else Statement
+Here is all simple, let's just look on examples:
+#### Example #
+```powershell
+> $Status=(Get-service -name bits).status
+> If ($Status -eq "Running") {
+>>     Clear-Host
+>>     Write-Output "Service is being stopped"
+>>     Stop-Service -name bits
+>> } ElseIf ($Status -eq "Pending") {
+>>     Clear-Host
+>>     Write-Output "Service is in undefined status"
+>> } Else {
+>>     Clear-Host
+>>     Write-Output "Service is already stopped"
+>> }
+```
+ ## Feature # - Switch
+ Just the same, all should be clear from exmaples:
+ #### Example #
+ ```powershell
+ > [int] $status = Read-Host('Enter number between 0..4')
+Enter number between 0..4: 4
+> Switch ($status) {
+>>   0 { $status_text = 'ok' }
+>>   1 { $status_text = 'error' }
+>>   2 { $status_text = 'jammed' }
+>>   3 { $status_text = 'overheated' }
+>>   4 { $status_text = 'empty' }
+>>   default { $status_text = 'unknown' }
+>> }
+> $status_text
+empty
+ ```
 
 ## Feature # - Common Parameter in Powershell
 
