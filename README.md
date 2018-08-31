@@ -1079,6 +1079,36 @@ Enter number between 0..4: 4
 > $status_text
 empty
  ```
+## Feature - Loops(While,Do-While)
+And again short and self explained examples:
+#### Example #
+```powershell
+> # Do loop
+> $i= 1
+> Do {
+>>     Write-Output "Workshops is great event for $i times"
+>>     $i=$i+1 # $i++
+>> } While ($i -le 5) #Also Do-Until
+Workshops is great event for 1 times
+Workshops is great event for 2 times
+Workshops is great event for 3 times
+Workshops is great event for 4 times
+Workshops is great event for 5 times
+>
+> # While Loop
+> $i=5
+> While ($i -gt 1) {
+>>     Write-Output "Workshops is sucks when $i in one day"
+>>     $i--
+>> }
+Workshops is sucks when 5 in one day
+Workshops is sucks when 4 in one day
+Workshops is sucks when 3 in one day
+Workshops is sucks when 2 in one day
+```
+Hope all is really clear)))
+
+
 
 ## Feature # - Common Parameter in Powershell
 
