@@ -1133,7 +1133,10 @@ Application Layer Gateway Service
 >>     Start calc
 >> }
 ```
-## Feature # - 
+## Feature # - Complete Template
+This is not feature - this is just complete template of availbale parameters and help description for functions
+
+It's loceted at [CompleteTemplate.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/CompleteTemplate.ps1)
 
 ## Feature # - Common Parameter in Powershell
 
