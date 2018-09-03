@@ -1276,8 +1276,55 @@ PS C:\Users\bbenetskyi> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
 4
 5
 ```
+`cmdletbinding` - provide the ability to use `Write-Verbose` and `Write-Debug` in your script or function, and have their output controlled by `-Verbose` and `-Debug` parameters of that script or function. 
 
-## Feature #
+# Chapter #6 - Modules and Functions
+
+## Feature # - Functions
+Hmm, what is function? We could check it as enhanced PowerShell users:
+#### Example #
+```powershell
+> help about_functions
+LONG DESCRIPTION
+    A function is a list of Windows PowerShell statements that has a name
+    that you assign. When you run a function, you type the function name.
+    The statements in the list run as if you had typed them at the command
+    prompt.
+```
+How looks like functions?
+#### Example #
+```powershell
+>help about_functions -examples
+```
+Now let's define simple function which checks [disk info](https://github.com/bbenetskyy/powershell-live-talks/blob/master/DiskInfo.ps1) for some computer.
+#### Example #
+```powershell
+"Function Get-DiskInfo{
+>>
+>>     [CmdletBinding()]
+>>     param(
+>>         [Parameter(Mandatory=`$true)]
+>>         [String]`$ComputerName,
+>>         [String]`$Drive='c:'
+>>     )
+>>     Get-WmiObject -class Win32_logicalDisk -Filter `"DeviceID='`$Drive'`" -ComputerName `$ComputerName |
+>>         Select PSComputerName, DeviceID,
+>>             @{n='Size(GB)';e={`$_.size / 1gb -as [int]}},
+>>             @{n='Free(GB)';e={`$_.Freespace / 1gb -as [int]}}
+>>
+>> }" | Out-File DiskInfo.ps1
+> [System.Net.Dns]::GetHostByName($VM)
+
+HostName   Aliases AddressList
+--------   ------- -----------
+bbenetskyy {}      {192.168.99.1, 192.168.56.1, 192.168.0.151}
+> . .\DiskInfo.ps1
+> Get-DiskInfo bbenetskyy
+
+PSComputerName DeviceID Size(GB) Free(GB)
+-------------- -------- -------- --------
+BBENETSKYY     C:            488      239
+```
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
 https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
