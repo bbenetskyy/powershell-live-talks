@@ -16,15 +16,21 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 5. Objects and Pipe lines
 6. First scripts
 7. Modules and Functions
-8. //TODO
+8. Killer Features
 
-```
+```powershell
 ii .
 show-object  $x
 new-object -type FileResource
 [FileResource]::new()
 [string]::new
 [ValidateSet('2','3')]
+get-w*e*e
+about_PSModule.help.txt
+$a,$b,$c = get-* # $a == 1; $b == 2; $c == all other
+$c.prop == call prop in each and list a result list
+gps [a-r]*[g-p]* | stop-process -WhatIf
+stop-process -name lsass
 
 ```
 
