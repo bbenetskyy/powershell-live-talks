@@ -1440,14 +1440,55 @@ At line:1 char:1
     + FullyQualifiedErrorId : CommandNotFoundException
 ```
 
+## Feature # - Variable Availability in Functions
 
+When you first assign a value to a variable (initialize it) in a script, the variable is only available within the script and not on the console where you launched the script. Likewise, if you define a variable in a function, you cannot access its value at the script level where you called the function. The variable’s scope is responsible for this behavior; it determines where the variable is available.
 
+**Scopes** are organized in hierarchies. At the top sits the Global scope. This scope is created whenever you start a PowerShell session. The **Script** scope is one level below the **Global** scope. Next is the scope of a function that you define in your script, and, if you create a function within a function, you also create a new scope that sits below the other scopes. A scope that is located one level above a certain other scope is called the parent scope; the lower-level scope is its child scope.
 
+Variables defined in a child scope are unavailable in the parent scope. However, in the child scope, you have read access to variables initialized in the parent scope. Read access reaches down to all lower levels.
 
+#### Example #
+```powershell
+> $Script = "Script scope"
+> function myFunction {
+>>      $Function = "Scope of the function"
+>>      $Script
+>>      $Script = "Trying to change a variable in the Script scope"
+>> }
+> myFunction
+Script scope
+> $Script
+Script scope
+> $Function
+```
 
+You can change this default behavior of PowerShell by using scope modifiers. The four available modifiers correspond to the absolute scopes mentioned above: `Private`, `Local`, `Script`, and `Global`. The command below creates a variable in a `Private` scope:
+#### Example #
+```powershell
+> $Private:internal = "Hidden!!!"
+```
+This ensures that the variable can only be accessed in its Local scope (the scope where you defined it) and not in its child scopes.
 
-
-
+In the example below, both variables are defined in the function, but only the one with the Script modifier is available at the script level:
+#### Example #
+```powershell
+> function scopeFunction {
+      $Script:ScriptScope = "Created in the Script Scope"
+      $FunctionScope = "Created in the scope of the function"
+}
+> scopeFunction
+> $ScriptScope
+Created in the Script Scope
+> $FunctionScope
+```
+Alternatively, you can use the `New-Variable` cmdlet to create a variable with the `AllScope` property:
+#### Example #
+```powershell
+> New-Variable -Name coolVar -Option AllScope -Value "Available in all child scopes" 
+> $coolVar
+Available in all child scopes
+```
 
 ## Feature # - Background Jobs on Modules
 
@@ -1458,6 +1499,13 @@ The `Start-Job` cmdlet starts a PowerShell background job on the local computer.
 
 A PowerShell background job runs a command without interacting with the current session. When you start a background job, a job object returns immediately, even if the job takes an extended time to finish. You can continue to work in the session without interruption while the job runs.
 
+https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
+
+## Feature # - How to create your first PowerShell Module Command
+https://sid-500.com/2017/11/10/powershell-functions-how-to-create-your-first-powershell-module-command/
+
+## Feature # - How And When To Create And Use PowerShell Modules
+http://www.tomsitpro.com/articles/powershell-modules,2-846.html
 
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
