@@ -38,6 +38,11 @@ invoke-scriptanalyzer -path test.ps1
 New-Module 
 [switch]test == -test
 ALWAYS NON PLURAL NAMES
+Param (
+        [parameter(ValueFromPipelineByPropertyName)]
+        [Alias('IPAddress','__Server','CN')]
+        [string[]]$Computername
+    )
 ```
 
 [Jeff Hicks](https://github.com/jdhitsolutions)
@@ -1593,3 +1598,6 @@ sometext
 
 <a name="usage"></a>
 ## 2. Usage tips
+
+## Feature # - [ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
+
