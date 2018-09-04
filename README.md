@@ -31,7 +31,9 @@ $a,$b,$c = get-* # $a == 1; $b == 2; $c == all other
 $c.prop == call prop in each and list a result list
 gps [a-r]*[g-p]* | stop-process -WhatIf
 stop-process -name lsass
-
+import-module -name psscript*
+get-command -module psscri*
+invoke-scriptanalyzer -path test.ps1
 ```
 
 [Jeff Hicks](https://github.com/jdhitsolutions)
@@ -1325,6 +1327,9 @@ PSComputerName DeviceID Size(GB) Free(GB)
 -------------- -------- -------- --------
 BBENETSKYY     C:            488      239
 ```
+
+## Feature # - Multifunctions in one file
+
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
 https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
