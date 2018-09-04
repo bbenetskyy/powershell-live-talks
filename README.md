@@ -17,6 +17,7 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 6. First scripts
 7. Modules and Functions
 8. Killer Features
+9. Real World Examples
 
 ```powershell
 ii .
@@ -34,6 +35,9 @@ stop-process -name lsass
 import-module -name psscript*
 get-command -module psscri*
 invoke-scriptanalyzer -path test.ps1
+New-Module 
+[switch]test == -test
+ALWAYS NON PLURAL NAMES
 ```
 
 [Jeff Hicks](https://github.com/jdhitsolutions)
@@ -1061,16 +1065,16 @@ Here is all simple, let's just look on examples:
 ```powershell
 > $Status=(Get-service -name bits).status
 > If ($Status -eq "Running") {
->>     Clear-Host
->>     Write-Output "Service is being stopped"
->>     Stop-Service -name bits
->> } ElseIf ($Status -eq "Pending") {
->>     Clear-Host
->>     Write-Output "Service is in undefined status"
->> } Else {
->>     Clear-Host
->>     Write-Output "Service is already stopped"
->> }
+     Clear-Host
+     Write-Output "Service is being stopped"
+     Stop-Service -name bits
+ } ElseIf ($Status -eq "Pending") {
+     Clear-Host
+     Write-Output "Service is in undefined status"
+ } Else {
+     Clear-Host
+     Write-Output "Service is already stopped"
+ }
 ```
  ## Feature # - Switch
  Just the same, all should be clear from exmaples:
@@ -1079,13 +1083,13 @@ Here is all simple, let's just look on examples:
  > [int] $status = Read-Host('Enter number between 0..4')
 Enter number between 0..4: 4
 > Switch ($status) {
->>   0 { $status_text = 'ok' }
->>   1 { $status_text = 'error' }
->>   2 { $status_text = 'jammed' }
->>   3 { $status_text = 'overheated' }
->>   4 { $status_text = 'empty' }
->>   default { $status_text = 'unknown' }
->> }
+   0 { $status_text = 'ok' }
+   1 { $status_text = 'error' }
+   2 { $status_text = 'jammed' }
+   3 { $status_text = 'overheated' }
+   4 { $status_text = 'empty' }
+   default { $status_text = 'unknown' }
+ }
 > $status_text
 empty
  ```
@@ -1096,9 +1100,9 @@ And again short and self explained examples:
 > # Do loop
 > $i= 1
 > Do {
->>     Write-Output "Workshops is great event for $i times"
->>     $i=$i+1 # $i++
->> } While ($i -le 5) #Also Do-Until
+     Write-Output "Workshops is great event for $i times"
+     $i=$i+1 # $i++
+ } While ($i -le 5) #Also Do-Until
 Workshops is great event for 1 times
 Workshops is great event for 2 times
 Workshops is great event for 3 times
@@ -1108,9 +1112,9 @@ Workshops is great event for 5 times
 > # While Loop
 > $i=5
 > While ($i -gt 1) {
->>     Write-Output "Workshops is sucks when $i in one day"
->>     $i--
->> }
+     Write-Output "Workshops is sucks when $i in one day"
+     $i--
+ }
 Workshops is sucks when 5 in one day
 Workshops is sucks when 4 in one day
 Workshops is sucks when 3 in one day
@@ -1125,21 +1129,21 @@ We already saw it. Not we will just look what forms it have:
 > # Foreach - used often in our scripting for today
 > $services = Get-Service
 > ForEach ($service in $services) {
->>   $service.Displayname
->> }
+   $service.Displayname
+ }
 Adobe Flash Player Update Service
 AllJoyn Router Service
 Application Layer Gateway Service
 ...
 > #For loop
 > For ($i=0;$i –lt 5;$i++) {
->>  #do something
->> }
+  #do something
+ }
 >
 > #Another way
 > 1..5 | ForEach-Object -process {
->>     Start calc
->> }
+     Start calc
+ }
 ```
 ## Feature # - Complete Template
 This is not feature - this is just complete template of availbale parameters and help description for functions
@@ -1152,16 +1156,16 @@ The example below will use `Get-Service` to get a list of all of the services on
 #### Example #
 ```powershell
 > Get-Service -PipelineVariable  Service |  Sort-Object -Property  State |  ForEach {
->>
->>   [pscustomobject]@{
->>
->>   Name =  $Service.Name
->>
->>   DisplayName =  $_.DisplayName
->>
->>   }
->>
->> }
+
+   [pscustomobject]@{
+
+   Name =  $Service.Name
+
+   DisplayName =  $_.DisplayName
+
+   }
+
+ }
 
 Name          DisplayName
 ----          -----------
@@ -1181,14 +1185,14 @@ Building a function that allows you to make use of this parameter is easier than
 #### Example #
 ```powershell
 > Function Test-Function  {
->>
->>   Param (
->>
->>   [string[]]$Data
->>
->>   )
->>
->> }
+
+   Param (
+
+   [string[]]$Data
+
+   )
+
+ }
 > Get-Command Test-Function  -Syntax
 
 Test-Function [[-Data] <string[]>]
@@ -1197,16 +1201,16 @@ Test-Function [[-Data] <string[]>]
 #### Example #
 ```powershell
 > Function Test-Function  {
->>
->>   [cmdletbinding()]
->>
->>   Param (
->>
->>   [string[]]$Data
->>
->>   )
->>
->>   }
+
+   [cmdletbinding()]
+
+   Param (
+
+   [string[]]$Data
+
+   )
+
+   }
 > Get-Command Test-Function  -Syntax
 
 Test-Function [[-Data] <string[]>] [<CommonParameters>]
@@ -1218,29 +1222,29 @@ Once you have done this then you can begin building out your function. The proce
 #### Example #
 ```powershell
 > Function Test-Function  {
->>
->>   [cmdletbinding()]
->>
->>   Param (
->>
->>   [parameter(ValueFromPipeline=$True)]
->>
->>   [object[]]$Data
->>
->>   )
->>
->>   Process  {
->>
->>   ForEach  ($Item in  $Data) {
->>
->>   $Item
->>
->>   }
->>
->>   }
->>
->> }
->> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
+
+   [cmdletbinding()]
+
+   Param (
+
+   [parameter(ValueFromPipeline=$True)]
+
+   [object[]]$Data
+
+   )
+
+   Process  {
+
+   ForEach  ($Item in  $Data) {
+
+   $Item
+
+   }
+
+   }
+
+ }
+ 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
 1
 ```
 This does work as expected when using the named parameter
@@ -1257,20 +1261,20 @@ So how in the world can we make this support pipeline input? Well, we can make u
 #### Example #
 ```powershell
 > Function Test-Function  {
->>
->>   [cmdletbinding()]
->>
->>   Param (
->>
->>   [parameter(ValueFromPipeline=$True)]
->>
->>   [object[]]$Data
->>
->>   )
->>
->>   $input
->>
->> }
+
+   [cmdletbinding()]
+
+   Param (
+
+   [parameter(ValueFromPipeline=$True)]
+
+   [object[]]$Data
+
+   )
+
+   $input
+
+ }
 PS C:\Users\bbenetskyi> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
 1
 2
@@ -1302,19 +1306,19 @@ Now let's define simple function which checks [disk info](https://github.com/bbe
 #### Example #
 ```powershell
 "Function Get-DiskInfo{
->>
->>     [CmdletBinding()]
->>     param(
->>         [Parameter(Mandatory=`$true)]
->>         [String]`$ComputerName,
->>         [String]`$Drive='c:'
->>     )
->>     Get-WmiObject -class Win32_logicalDisk -Filter `"DeviceID='`$Drive'`" -ComputerName `$ComputerName |
->>         Select PSComputerName, DeviceID,
->>             @{n='Size(GB)';e={`$_.size / 1gb -as [int]}},
->>             @{n='Free(GB)';e={`$_.Freespace / 1gb -as [int]}}
->>
->> }" | Out-File DiskInfo.ps1
+
+     [CmdletBinding()]
+     param(
+         [Parameter(Mandatory=`$true)]
+         [String]`$ComputerName,
+         [String]`$Drive='c:'
+     )
+     Get-WmiObject -class Win32_logicalDisk -Filter `"DeviceID='`$Drive'`" -ComputerName `$ComputerName |
+         Select PSComputerName, DeviceID,
+             @{n='Size(GB)';e={`$_.size / 1gb -as [int]}},
+             @{n='Free(GB)';e={`$_.Freespace / 1gb -as [int]}}
+
+ }" | Out-File DiskInfo.ps1
 > [System.Net.Dns]::GetHostByName($VM)
 
 HostName   Aliases AddressList
@@ -1329,10 +1333,141 @@ BBENETSKYY     C:            488      239
 ```
 
 ## Feature # - Multifunctions in one file
+Also we could define couple functions in one `ps1` script file. Just plate couple functions in one file:
+#### Example #
+```powershell
+> "Function Function1 { Write-Output 'Call functon #1' }
+ Function Function2 { Write-Output 'Call functon #2' }
+ Function Function3 { Write-Output 'Call functon #3' }
+
+ Function1
+ Function2
+ Function3
+ " | Out-File MultiFunctions.ps1
+> .\MultiFunctions.ps1
+Call functon #1
+Call functon #2
+Call functon #3
+```
+
+## Feature # - Script Invoking from files
+
+Here are listed available mehtods for invoke your function in current powreshell window.
+But before let's create [SelfDescribed.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/SelfDescribed.ps1):
+
+#### Example #
+```powershell
+> more .\SelfDescribed.ps1
+Write-Host "Loading functions"
+function MyFunc
+{
+    Write-Host "MyFunc is running!"
+}
+Write-Host "Done"
+
+Function addOne([int]$intIN)
+{
+$intIN + 1
+}
+Function addTwo([int]$intIN)
+{
+$intIN + 2
+}
+
+#
+#
+#
+
+> powershell -command "& { . .\SelfDescribed.ps1; MyFunc }"
+Loading functions
+Done
+MyFunc is running!
+> MyFunc
+MyFunc : The term 'MyFunc' is not recognized as the name of a cmdlet, function, script file, or operable
+program. Check the spelling of the name, or if a path was included, verify that the path is correct and try
+again.
+At line:1 char:1
++ MyFunc
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (MyFunc:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+#
+#
+#
+
+> . .\SelfDescribed.ps1 
+ Loading functions
+ Done
+ > MyFunc
+  MyFunc is running!
+
+#
+#
+#
+
+> .\SelfDescribed.ps1
+Loading functions
+Done
+> MyFunc
+MyFunc : The term 'MyFunc' is not recognized as the name of a cmdlet, function, script file, or operable
+program. Check the spelling of the name, or if a path was included, verify that the path is correct and try
+again.
+At line:1 char:1
++ MyFunc
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (MyFunc:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+#
+#
+#
+
+> . .\SelfDescribed.ps1
+Loading functions
+Done
+> addOne(2)
+3
+> Remove-Item function:\addOne
+> addOne(2)
+addOne : The term 'addOne' is not recognized as the name of a cmdlet, function, script file, or operable
+program. Check the spelling of the name, or if a path was included, verify that the path is correct and try
+again.
+At line:1 char:1
++ addOne(2)
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (addOne:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+```
+
+
+
+
+
+
+
+
+
+
+## Feature # - Background Jobs on Modules
+
+Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot
+
+
+The `Start-Job` cmdlet starts a PowerShell background job on the local computer.
+
+A PowerShell background job runs a command without interacting with the current session. When you start a background job, a job object returns immediately, even if the job takes an extended time to finish. You can continue to work in the session without interruption while the job runs.
+
 
 
 ## Feature # - Sending Email With Send-MailMessage (Gmail example)
-https://www.pdq.com/blog/powershell-send-mailmessage-gmail/
+Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot
+
+
+
+New-Module
+
+```
 
 ## Feature # - How to zip up files using .NET and Add-Type
 https://www.pdq.com/blog/powershell-zip-up-files-using-.net-and-add-type/
