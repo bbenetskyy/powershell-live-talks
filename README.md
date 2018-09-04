@@ -1490,6 +1490,66 @@ Alternatively, you can use the `New-Variable` cmdlet to create a variable with t
 Available in all child scopes
 ```
 
+## Feature # - Begin, Process and End of Function lifecycle
+
+For functions and script cmdlets, three methods are available for processing pipeline input: `Begin`, `Process`, and `End` blocks. In these blocks, the `$_` variable represents the current input object.
+
+## Begin
+This block is used to provide optional one-time pre-processing for the function. 
+The PowerShell runtime uses the code in this block one time for each instance of the function in the pipeline.
+
+## Process
+This block is used to provide record-by-record processing for the function. This block might be used any number of times, or not at all, depending on the input to the function. For example, if the function is the first command in the pipeline, the **Process** block will be used one time. If the function is not the first command in the pipeline, the **Process** block is used one time for every input that the function receives from the pipeline. If there is no pipeline input, the **Process** block is not used.
+
+A Filter is a shorthand representation of a function whose body is composed entirely of a process block.
+
+This block must be defined if a function parameter is set to accept pipeline input. If this block is not defined and the parameter accepts input from the pipeline, the function will miss the values that are passed to the function through the pipeline.
+
+Also, if the function/cmdlet supports confirmation requests (the `-SupportsShouldProcess` parameter is set to `$True`), the call to the **ShouldProcess** method must be made from within the **Process** block.
+
+## End
+This block is used to provide optional one-time post-processing for the function.
+
+#### Example #
+```powershell
+> . .\FunctionWithSteps1.ps1 -force
+> 1..10|Show-Numbers
+Begin
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+End
+> . .\FunctionWithSteps2.ps1 -force
+> Get-CompInfo bbenetskyy -Verbose -LogExecutionTime -WithPSObject
+VERBOSE: Execution time logging turned on
+VERBOSE: Computer: bbenetskyy
+
+VERBOSE: Completed in 140.3881
+FreeSpace ComputerName OS Name                  OS Build
+--------- ------------ -------                  --------
+      245 bbenetskyy   Microsoft Windows 10 Pro 17134
+
+
+> Get-CompInfo bbenetskyy -Verbose -LogExecutionTime
+VERBOSE: Execution time logging turned on
+VERBOSE: Computer: bbenetskyy
+
+Name                           Value
+----                           -----
+FreeSpace                      245
+ComputerName                   bbenetskyy
+OS Name                        Microsoft Windows 10 Pro
+OS Build                       17134
+VERBOSE: Completed in 57.2333
+```
+
 ## Feature # - Background Jobs on Modules
 
 Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot
