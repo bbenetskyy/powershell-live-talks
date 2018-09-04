@@ -1555,6 +1555,32 @@ OS Build                       17134
 VERBOSE: Completed in 57.2333
 ```
 
+## Feature # - Help Mesage
+
+You could get more information [about help messsages](https://powershell.org/2013/05/06/a-helpful-message-about-helpmessage/) from that site.
+
+Here I just post important message from there:
+
+>**Don't use it!** Users can't see it. It does no harm, but it has no value. Danger lurks in writing a HelpMessage instead of writing help that users can see. Write help that Get-Help gets, that is, XML help or comment-based help.
+
+#### Example #****
+```powershell
+  [Parameter(
+            Mandatory = $true,
+            HelpMessage="Please enter a set of number"
+  )]
+  [int] $Number
+```
+If you want to be helpful, the correct way to provide help for a parameter in a script or function is this:
+#### Example #
+```powershell
+<#
+.PARAMETER  Number
+ Going for each of input numbers
+ and print them out.
+#>
+```
+
 ## Feature # - Background Jobs on Modules
 
 Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot

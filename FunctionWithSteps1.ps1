@@ -1,9 +1,15 @@
+<#
+.PARAMETER  Number
+ Going for each of input numbers
+ and print them out.
+#>
 Function Show-Numbers {
     [CmdletBinding()]
     Param(
         [Parameter(
             Mandatory = $true,
-            ValueFromPipeline = $true
+            ValueFromPipeline = $true,
+            HelpMessage="Please enter a set of number"
         )]
         [int] $Number
     )
