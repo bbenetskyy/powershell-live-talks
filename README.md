@@ -1581,6 +1581,80 @@ If you want to be helpful, the correct way to provide help for a parameter in a 
 #>
 ```
 
+## Feature # - Aliases
+The `Set-Alias` cmdlet creates or changes an alias (alternate name) for a cmdlet or for a command element, such as a function, a script, a file, or other executable. You can also use `Set-Alias` to reassign a current alias to a new command, or to change any of the properties of an alias, such as its description. Unless you add the alias to the PowerShell profile, the changes to an alias are lost when you exit the session or close PowerShell.
+
+#### Example #
+```powershell
+#[Alias('Host')] 
+> . .\FunctionWithSteps2.ps1 -force
+> Get-CompInfo -host bbenetskyy -Verbose -LogExecutionTime
+Get-CompInfo : A parameter cannot be found that matches parameter name 'host'.
+At line:1 char:14
++ Get-CompInfo -host bbenetskyy -Verbose -LogExecutionTime
++              ~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-CompInfo], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Get-CompInfo
+
+> . .\FunctionWithSteps2.ps1 -force
+> Get-CompInfo -host bbenetskyy -Verbose -LogExecutionTime
+VERBOSE: Execution time logging turned on
+VERBOSE: Computer: bbenetskyy
+
+Name                           Value
+----                           -----
+FreeSpace                      245
+ComputerName                   bbenetskyy
+OS Name                        Microsoft Windows 10 Pro
+OS Build                       17134
+VERBOSE: Completed in 73.039
+
+```
+## Feature # - Validate Set
+
+Let's import function which print most important names from [South Park](https://github.com/bbenetskyy/powershell-live-talks/blob/master/SouthPark.ps1)
+#### Example #
+```powershell
+> 'Stan', 'Kyle', 'Kenny', 'Eric' | Show-Names
+WARNING: Stan
+WARNING: Kyle
+WARNING: Kenny
+WARNING: Eric
+> 'Stan', 'Kyle', 'Kenny', 'Eric', 'The New Kid' | Show-Names
+WARNING: Stan
+WARNING: Kyle
+WARNING: Kenny
+WARNING: Eric
+Show-Names : Cannot validate argument on parameter 'Name'. The argument "The New Kid" does not belong to the set
+"Stan,Kyle,Eric,Kenny" specified by the ValidateSet attribute. Supply an argument that is in the set and then
+try the command again.
+At line:1 char:50
++ 'Stan', 'Kyle', 'Kenny', 'Eric', 'The New Kid' | Show-Names
++                                                  ~~~~~~~~~~
+    + CategoryInfo          : InvalidData: (The New Kid:String) [Show-Names], ParameterBindingValidationExceptio
+   n
+    + FullyQualifiedErrorId : ParameterArgumentValidationError,Show-Names
+```
+
+## Feature # - Validate Pattern
+Let's ping some ip addresses with [PingIp.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/PingIp.ps1) script:
+#### Example #
+```powershell
+> . .\PingIp.ps1
+PS C:\Work\powershell-live-talks> '8.8.8.8' | Ping-Ip
+
+Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=10ms TTL=124
+Reply from 8.8.8.8: bytes=32 time=12ms TTL=124
+Reply from 8.8.8.8: bytes=32 time=8ms TTL=124
+Reply from 8.8.8.8: bytes=32 time=9ms TTL=124
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 8ms, Maximum = 12ms, Average = 9ms
+```
+
 ## Feature # - Background Jobs on Modules
 
 Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot

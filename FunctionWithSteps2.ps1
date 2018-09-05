@@ -1,7 +1,7 @@
 Function Get-CompInfo {
     [CmdletBinding()]
     Param(
-        #Want to support multiple computers
+        [Alias('Host')]
         [String[]]$ComputerName,
         [Switch]$LogExecutionTime,
         [switch]$WithPSObject
