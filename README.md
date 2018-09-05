@@ -1641,7 +1641,7 @@ Let's ping some ip addresses with [PingIp.ps1](https://github.com/bbenetskyy/pow
 #### Example #
 ```powershell
 > . .\PingIp.ps1
-PS C:\Work\powershell-live-talks> '8.8.8.8' | Ping-Ip
+> '8.8.8.8' | Ping-Ip
 
 Pinging 8.8.8.8 with 32 bytes of data:
 Reply from 8.8.8.8: bytes=32 time=10ms TTL=124
@@ -1653,6 +1653,48 @@ Ping statistics for 8.8.8.8:
     Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
     Minimum = 8ms, Maximum = 12ms, Average = 9ms
+```
+
+## Feature # - Try/Catch
+Let's import [TryCatch](https://github.com/bbenetskyy/powershell-live-talks/blob/master/TryCatch.ps1) function and test how it works:
+#### Example #
+```powershell
+> 'bbenetskyy' |Get-CompInfo -Verbose
+VERBOSE: Begin
+VERBOSE: Start Process
+VERBOSE: Computer Name - bbenetskyy
+VERBOSE: \\BBENETSKYY\root\cimv2:Win32_OperatingSystem=@
+VERBOSE: \\BBENETSKYY\root\cimv2:Win32_LogicalDisk.DeviceID="C:"
+VERBOSE:
+\\BBENETSKYY\root\cimv2:Win32_BIOS.Name="9ECN43WW(V3.03)",SoftwareElementID="9ECN43WW(V3.03)",SoftwareElementStat e=3,TargetOperatingSystem=0,Version="LENOVO - 1"
+
+
+ComputerName : bbenetskyy
+OS Name      : Microsoft Windows 10 Pro
+OS Build     : 17134
+Bios Version : LENOVO - 1
+FreeSpace    : 245
+
+VERBOSE: End Process
+VERBOSE: End
+
+
+> 'test'|Get-CompInfo -Verbose -ErrorLog
+VERBOSE: Begin
+VERBOSE: Start Process
+VERBOSE: Computer Name - test
+WARNING: You have a problem with computer test
+VERBOSE: End Process
+VERBOSE: End
+> more .\errorlog.txt
+
+Wednesday, September 5, 2018 09:36:53
+
+
+test
+The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set
+to Stop: The RPC server is unavailable. (Exception from HRESULT: 0x800706BA)
+
 ```
 
 ## Feature # - Background Jobs on Modules
