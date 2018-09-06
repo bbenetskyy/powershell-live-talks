@@ -1697,6 +1697,23 @@ to Stop: The RPC server is unavailable. (Exception from HRESULT: 0x800706BA)
 
 ```
 
+## Feature # - Support Should Process
+
+All this really good explained at [Supports Should](https://becomelotr.wordpress.com/2013/05/01/supports-should-process-oh-really/) article. Here we will just try that examples from [ShouldProcess.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/ShouldProcess.ps1):
+#### Example #
+```powershell
+> ls *.ps1 | Test-ShouldProcess -Destination .\ -Confirm
+> ls *.ps1 | Test-ShouldProcessEx -Destination .\ -Confirm
+```
+Atricle about [Confirm Impact](https://4sysops.com/archives/confirm-confirmpreference-and-confirmimpact-in-powershell/) at PowerShell parameters.
+
+## Feature # - Modules
+Typically, Windows PowerShell scripts are saved as **ps1** files. However, if a file is saved as a **psm1** file, it can be treated as a **module**.
+
+Sometimes you may have utility functions in your module that should stay internal to the module and not be made available to other scripts. If you want to have public and internal functions, you will need to use `Export-ModuleMember` in the **psm1** file to define the exported public functions.
+
+
+
 ## Feature # - Background Jobs on Modules
 
 Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot

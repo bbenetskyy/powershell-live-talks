@@ -11,6 +11,7 @@ Function Show-Numbers {
             ValueFromPipeline = $true,
             HelpMessage="Please enter a set of number"
         )]
+        #[ValidateRange(5,35)] 
         [int] $Number
     )
     Begin {
