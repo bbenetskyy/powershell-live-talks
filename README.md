@@ -10,14 +10,14 @@ https://kevinmarquette.github.io/2017-04-10-Powershell-exceptions-everything-you
 https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-in-powershell/
 
 # Agenda
-1. Intro
-2. Short intro to PowerShell
-3. Help in PowerShell
-5. Objects and Pipe lines
-6. First scripts
-7. Modules and Functions
-8. Killer Features
-9. Real World Examples
+1. [Intro](#intro)
+2. [Short intro to PowerShell](#short_intro)
+3. [Help in PowerShell](#help)
+5. [Objects and Pipe lines](#objects_pipe_line)
+6. [First scripts](#scripts)
+7. [Modules and Functions](#functions)
+8. [Killer Features](#features)
+9. [Real World Examples](#examples)
 
 ```powershell
 ii .
@@ -51,6 +51,8 @@ https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
 
 1. [ Description. ](#desc)
 2. [ Usage tips. ](#usage)
+
+<a name="intro"/>
 
 # Chapter #1 - Intro
 
