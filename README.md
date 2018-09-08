@@ -12,14 +12,51 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 # Agenda
 1. [Intro](#intro)
 2. [Short intro to PowerShell](#short_intro)
-    1. [Auto Completion](#auto_completion
-    2. )
+    1. [Auto Completion](#auto_completion)
+    2. [Basic Command Structure](#basic_command_structure))
+    3. [Regex In Search](#regex_in_search)
+    4. [Properties And Methods](#prop_and_methods)
+    5. [Break Current Command Execution](#break_execution)
+    6. [Checking Possible Actions](#check_actions)
 3. [Help in PowerShell](#help)
+    1. [Get-Help](#get_help)
+    2. [Display Basic Information One Page at a Time](#paging)
+    3. [Display More Information for a CmdLet](#more_info)
+    4. [Display Selected Parts of a CmdLet by Using Parameters](#display_parts_with_parameters)
+    5. [Search For a Word in Particular CmdLet Help Topic](#search_part_at_help)
+    6. [Display help for a script](#script_help)
 4. [Objects and Pipe lines](#objects_pipe_line)
+    1. [PowerShell returns objects](#ps_return_obj)
+    2. [PowerShell Pile lines](#pipe_line)
+    3. [Default Formatting](#default_formatting)
+    4. [Work with objects](#work_with_objects)
+    5. [Formatting Your Data](#format_data)
+    6. [Filtering and Comparing](#filter_compare)
+    7. [Display system processes one page at a time](#pagination)    
+    8. [Display session history](#display_history)
+    9. [Save and Import Your PowerShell History](#save_import_history)
+    10. [Clear Your PowerShell History](#clear_history)
+    11. [Get Enhanced Info by using Pipe Line](#enhanced_info)
+    12. [Truncating Parameters](#truncating_parameters)
 5. [First scripts](#scripts)
+    1. [Script policies](#script_policies)
+    2. [Using Variables to Store Objects](#use_vars)
+    3. [Variable Types](#var_types)
+    4. [Quotation Marks](#quotation_marks)
+    5. [If/Else Statement](#if_else)
+    6. [Switch](#switch)
+    7. [Loops(While,Do-While)](#loops)
+    8. [Foreach statement](#foreach)
+    9. [Complete Template](#template)
+    10. 
 6. [Modules and Functions](#functions)
 7. [Killer Features](#features)
 8. [Real World Examples](#examples)
+
+
+<a name=""/>
+
+
 
 test-path!!!!!
 
@@ -39,36 +76,86 @@ get-command -module mytools
 
 show-command new-modulemanifest
 ```powershell
-i
+ii .
+
+
 $x -ShowWindow
+
+
 show-object  $x
+
+
 new-object -type FileResource
 [FileResource]::new()
 [string]::new
+
+
 [ValidateSet('2','3')]
+
+
 get-w*e*e
+
+
 about_PSModule.help.txt
+
+
 $a,$b,$c = get-* # $a == 1; $b == 2; $c == all other
+
+
 $c.prop == call prop in each and list a result list
+
+
 gps [a-r]*[g-p]* | stop-process -WhatIf
+
+
 stop-process -name lsass
+
+
 import-module -name psscript*
+
+
 get-command -module psscri*
+
+
 invoke-scriptanalyzer -path test.ps1
+
+
 New-Module 
+
+
 [switch]test == -test
+
+
 ALWAYS NON PLURAL NAMES
+
+
 Param (
         [parameter(ValueFromPipelineByPropertyName)]
         [Alias('IPAddress','__Server','CN')]
         [string[]]$Computername
     )
+
+
 get-help about_fuctions_advanced_parameters | clip
+
+
 #he->tab
 | ft -View #==format-list
 
 | ft-view priority
+
+
 $x.pstypenme
+
+
+Set-Location Env:;
+Get-ChildItem; 
+
+
+Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")
+
+Add-Content -Path $Profile.CurrentUserAllHosts -Value '$Env:Path = `
+$Env:Path + ";C:\Temp"'
 ```
 
 [Jeff Hicks](https://github.com/jdhitsolutions)
@@ -132,11 +219,13 @@ WSManStackVersion             ` 3.0
 PSRemotingProtocolVersion      2.3
 SerializationVersion           1.1.0.1
 ```
-#### Example #
+#### Example #2
 ```powershell
 > cd 'some path search with tab'
 ```
-## Feature # - basic command structure.
+<a name="basic_command_structure"/>
+
+## Feature #2 - Basic Command Structure.
 
 > Windows PowerShell commands have the following generic structure: `Verb-prefix_singular_noun`
 
@@ -144,7 +233,7 @@ The various Microsoft product teams use command prefixes a bit inconsistently, b
 
 The singular-noun part of a PowerShell command makes it easier to guess at the correct command. For example, have you ever asked yourself whether the correct command name is `Get-Service` (singular) or `Get-Services` (plural)? You don’t need to worry anymore, because the best-practice guideline is to make all nouns singular.
 
-#### Example #
+#### Example #3
 ```powershell
 > Get-Service
 
@@ -158,12 +247,13 @@ Stopped  ALG                Application Layer Gateway Service
 Running  AMD External Ev... AMD External Events Utility
 ...
 ```
+<a name="regex_in_search"/>
 
-## Feature # - regex in search
+## Feature #3 - Regex In Search
 
 You could use in search `*` to accept any count of characters or `?` to accept one only. Also other Regex elements are available but most frequently used this two.
 
-#### Example #
+#### Example #4
 ```powershell
 >  Get-Service -Name v*
 
@@ -196,10 +286,11 @@ Stopped  vmictimesync       Hyper-V Time Synchronization Service
 Stopped  vmicvmsession      Hyper-V PowerShell Direct Service
 Stopped  vmicvss            Hyper-V Volume Shadow Copy Requestor
 ```
+<a name="prop_and_methods"/>
 
-## Feature # - properties and methods
+## Feature #4 - Properties And Methods
 
-#### Example #
+#### Example #5
 At powershell all returned items is objects an
 ```powershell
 >  Get-Service -Name v* -Exclude vm*
@@ -211,23 +302,26 @@ Stopped  vds                Virtual Disk
 Stopped  VSS                Volume Shadow Copy
 Stopped  VSStandardColle... Visual Studio Standard Collector Se...
 ```
+<a name="break_execution"/>
 
-## Feature # - break current command execution
+## Feature #5 - Break Current Command Execution
 
 > Errors will be reviewed later on chapter #7
 
 If we run some large command and in meantime think that we don't need it or we make some mistake during typing command. We could break current execution wth command `Ctrl+C`(same as in CMD)
-#### Example #
+#### Example #6
 ```powershell
 > while($true){ Get-Alias } 
 #...
 Ctrl+C
 >
 ```
-## Feature # - Checking possible actions
+<a name="check_actions"/>
+
+## Feature #6 - Checking Possible Actions
 If we not sure if such command even exist we should try `Get-Command` for list all possible matches of searched command and ster it use `Get-Help` for detailed command description(_about it more at Chapter #3_)
 
-#### Example #
+#### Example #7
 ```powershell
 > Get-Command *member
 
@@ -245,7 +339,7 @@ Alias           gm -> Get-Member
 ```
 
 What about searching aliases for commands? We could use `Get-Member` or `gm` commands as well thanks for possibility of defining aliases. Also there a lot of predefined by system
-#### Example #
+#### Example #8
 ```powershell
 > Get-Alias gm
 
@@ -276,15 +370,18 @@ CommandType     Name                                               Version    So
 Alias           gm -> Get-Member
 ```
 
+<a name="help"/>
 
 # Chapter #3 - Help in PowerShell
 
-## Feture #7 - Get-Help
+<a name="get_help">
+
+## Feature #1 - Get-Help
 
 The [`Get-Help`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-6) cmdlet displays information about PowerShell concepts and commands, including cmdlets, functions, CIM commands, workflows, providers, aliases and scripts.
 
 To get help for a PowerShell command, type `Get-Help` followed by the command name, such as: 
-#### Example #
+#### Example #9
 ```powershell
 > Get-Help Get-Process
 ```
@@ -298,29 +395,36 @@ In addition to Get-Help, you can also type help or man, which displays one scree
 `Get-Help` gets the help content that it displays from help files on your computer. Without the help files, `Get-Help` displays only basic information about commands. Some PowerShell modules come with help files. However, starting in Windows PowerShell 3.0, the modules that come with the Windows operating system do not include help files. To download or update the help files for a module in Windows PowerShell 3.0, use the `Update-Help` cmdlet.
 
 You can also view the help topics for PowerShell online in the Microsoft Docs. To get the online version of a help topic, use the Online parameter, such as:
-#### Example #
+#### Example #10
 ```powershell
  > Get-Help Get-Process -Online
 ```
 If you type `Get-Help` followed by the exact name of a help topic, or by a word unique to a help topic, `Get-Help` displays the topic contents. If you enter a word or word pattern that appears in several help topic titles, `Get-Help` displays a list of the matching titles. If you enter a word that does not appear in any help topic titles, `Get-Help` displays a list of topics that include that word in their contents.
-#### Example #
+#### Example #11
 ```powershell
 > Get-Help Format-Table
 > Get-Help -Name Format-Table
 > Format-Table -?
 ```
 These commands display same basic information about the `Format-Table` cmdlet.
-## Feature # - Display basic information one page at a time
+
+<a name="paging"/>
+
+## Feature #2 - Display Basic Information One Page at a Time
+
 These commands display basic information about the `Format-Table` cmdlet one page at a time:
-#### Example #
+#### Example #12
 ```powershell
 > Get-Help Format-Table | Out-Host -Paging
 > help Format-Table
 > man Format-Table
 ```
-## Feature # - Display more information for a cmdlet
+
+<a name="more_info"/>
+
+## Feature # - Display More Information for a CmdLet
 These commands display more information about the `Format-Table` cmdlet than usual:
-#### Example #
+#### Example #13
 ```powershell
 > Get-Help Format-Table -Detailed
 > Get-Help Format-Table -Full
@@ -330,9 +434,12 @@ The `Detailed` parameter displays the detailed view of the help topic, which inc
 The `Full` parameter displays the full view of the help topic, which includes parameter descriptions, examples, input and output object types, and additional notes.
 
 **The `Detailed` and `Full` parameters are effective only for the commands whose help files are installed on the computer.**
-## Feature # - Display selected parts of a cmdlet by using parameters
+
+<a name="display_parts_with_parameters"/>
+
+## Feature #4 - Display Selected Parts of a CmdlLet by Using Parameters
 These commands display selected parts of the `Format-Table` cmdlet help
-#### Example #
+#### Example #14
 ```powershell
 > Get-Help Format-Table -Examples
 > Get-Help Format-Table -Parameter GroupBy
@@ -341,45 +448,55 @@ These commands display selected parts of the `Format-Table` cmdlet help
 The `Examples` parameter displays only the `NAME`, `SYNOPSIS`, and all Examples. You can not specify an `Example` number because the `Examples` parameter is a `switch parameter`.
 
 The `Parameter` parameter displays only the descriptions of the specified parameters. If you specify only the wildcard character (`*`), it displays the descriptions of all parameters.
-## Feature # - search for a word in particular cmdlet help topic
+
+<a name="search_part_at_help"/>
+
+## Feature #5 - Search For a Word in Particular CmdLet Help Topic
 This example shows how to search for a word in particular cmdlet help topic. This command searches for the word Clixml in the full version of the help topic for the Add-Member cmdled.
 Because the `Get-Help` cmdlet generates a `MamlCommandHelpInfo` object, not a `string`, you have to use a cmdlet that transforms the help topic content into a `string`, such as `Out-String` or `Out-File`.
-#### Example #
+#### Example #15
 ```powershell
 > Get-Help Add-Member -Full | Out-String -Stream | Select-String -Pattern Clixml
 ```
-## Feature # - Display help for a script
+<a name="script_help"/>
+
+## Feature #6 - Display help for a script
 We could show information also for a user scripts. Even with examples, as it will be shown in _Chapter #7_ 
-#### Example #
+#### Example #16
 ```powershell
 > Get-Help .\Get-ServiceStatus.ps1
 ```
+<a name="objects_pipe_line"/>
 
 # Chapter #4 - Objects and Pipe lines
 
-## Feature # - PowerShell return objects
+<a name="ps_return_obj"/>
+
+## Feature #1 - PowerShell returns objects
 When we call any command we mostly get as answer object with some type. When powershell try to return object, it's map it into UI table with command `Format-Table` with default properties for it.
-#### Example #
+#### Example #17
 ```powershell
 > Get-Help get-v*
 > Get-Help get-v* | Format-Table
 ```
 We could see what returned from previous side of pipe line with `Get-Member`(`gm`).
 
-## Feature # - PowerShell Pile lines
+<a name="pipe_line"/>
+
+## Feature #2 - PowerShell Pile lines
 
 There are plenty of Linux shells with a pipeline, allowing you to send the text that one command outputs as input to the next command in the pipeline. PowerShell takes this to the next level by allowing you to take the objects that one cmdlet outputs and pass them as input to the next cmdlet in the pipeline.
 
 `Get-Member` accept inputs via argument or via pipe line. In such way pipe line just move output with saving his type. 
 
-#### Example #
+#### Example #18
 ```powershell
 >Get-Member -InputObject (Get-Help get-v*)
 >Get-Help get-v* | Get-Member
 ```
 As you could saw these commands returns different values but work on the same input models. This works because `Get-Member` have different options to accepting input argument. To ensure of that we should check `Get-Help`
 
-#### Example #
+#### Example #19
 ```powershell
 > Get-Help Get-Member -Parameter Name
 
@@ -426,7 +543,7 @@ In help you could saw that `-InputObject <PSObject>` and this converts to `Syste
 Also this was described at help with more details.
 
 If we would like to get all properties of `Get-Disk` command with Pipe Line we could simply filter only needed for use properties
-#### Example #
+#### Example #20
 ```powershell
 > Get-Disk  | Get-Member | Where-Object {$_.MemberType -eq 'Property'}
 Name                 MemberType Definition
@@ -440,12 +557,13 @@ Guid                 Property   string Guid {get;}
 ...
 ```
 And if we want to run with it, then we should run:
-#### Example #
+#### Example #21
 ```powershell
 > Get-Disk |   select -Property *
 ```
+<a name="default_formattings"/>
 
-## Feature # - Default Formatting
+## Feature #3 - Default Formatting
 When I first started out with PowerShell, I thought everything was magic, but the truth is it just takes a little bit of time to understand what is going on underneath the hood. The same is true for the PowerShell formatting system. In fact, if you run the Get-Service cmdlet, the output generated only shows you 3 properties: `Status`, `Name` and `DisplayName`.
 
 
@@ -453,7 +571,7 @@ But if you pipe `Get-Service` to `Get-Member`, you see that the `ServiceControll
 
 
 The answer lies within a hidden file that defines how most of the built-in cmdlets display their output. To get an understanding, type the following into the shell and hit enter.
-#### Example #
+#### Example #22
 ```powershell
 > Get-Service -Name amd*
 Status   Name               DisplayName
@@ -480,11 +598,13 @@ ToString                  ScriptMethod  System.Object ToString();
 Suddenly, you can see that underneath the hood PowerShell is formatting any objects in the Pipeline that are of the ServiceController type and creating a table with three columns: Status, Name, and DisplayName. But what if the type you are dealing with doesn’t have an entry in that file, or any other format file for that matter? Well then, it’s quite simple actually. If the object coming out of the pipeline has 5 or more properties:
 > PowerShell displays all of the object’s properties in a list; if it has less than 5 properties, it displays them in a table.
 
-## Feature # - Works with object
+<a name="work_with_objects"/>
 
-Let's select one of services. Best Windows service for test is `bits` - Background Intelligent Transfer Service. Let's get that service to variable, check status, run some functions from `Get-Member`.
+## Feature #4 - Work with objects
 
-#### Example #
+Let's select one of services. Best Windows service for test is `bits` - Background Intel    ligent Transfer Service. Let's get that service to variable, check status, run some functions from `Get-Member`.
+
+#### Example #23
 ```powershell
 > $Service=Get-Service -Name bits
 > $Service | GM
@@ -511,7 +631,7 @@ Running
 Service Name is BITS
 ```
 Also we could work in quite same way with array of values in variable. More details will be with _Feature Variable Types_.
-#### Example #
+#### Example #24
 ```powershell
 > $Services=Get-Service
 > $services[0]
@@ -530,8 +650,9 @@ Service Name is Application Information
 > "Service Name is $($services[4].name.ToUpper())"
 Service Name is APPINFO
 ```
+<a name="format_data"/>
 
-## Feature # - Formatting Your Data
+## Feature #5 - Formatting Your Data
 
 If you are not happy with the default formatting of an object or type, you can roll your own formatting. There are three cmdlets you need to know to do this:
 * `Format-List`
@@ -539,7 +660,7 @@ If you are not happy with the default formatting of an object or type, you can r
 * `Format-Wide`
 
 `Format-Wide` simply takes a collection of objects and displays a single property of each object. By default, it will look for a name property; if your objects don’t contain a name property, it will use the first property of the object once the properties have been sorted alphabetically.
-#### Example #
+#### Example #25
 ```powershell
 > Get-Service -Name a*  | Format-Wide
 
@@ -555,7 +676,7 @@ AudioEndpointBuilder              Audiosrv
 AxInstSV
 ```
 As you can see, it also defaults to two columns, although you can specify both which property you want to use, as well as how many columns you want to be displayed.
-#### Example #
+#### Example #26
 ```powershell
 > Get-Service -Name a*  | Format-Wide  -Property DisplayName -Column 6
 
@@ -565,7 +686,7 @@ Applicat... Applica... Applica... App Rea... Microso... AppX De...
 ASP.NET ... Assigne... Windows... Windows... ActiveX...
 ```
 If something is formatted as a table by default, you can always switch it to list view by using the `Format-List` cmdlet. Let’s take a look at the output of the `Get-Process` cmdlet.
-#### Example #
+#### Example #27
 ```powershell
 > gps
 
@@ -584,7 +705,7 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessN
    1205     173   155864     132668   3,843.92  16040   1 Brady...
 ```
 This tabular view actually suits this kind of information very well, but let’s pretend we want to view it in list form. All we really have to do is pipe it to `Format-List`.
-#### Example #
+#### Example #28
 ```powershell
 > Get-Process | Format-List
 
@@ -607,7 +728,7 @@ SI      : 0
 Name    : armsvc
 ```
 As you can see there are only four items displayed in the list by default. To view all the properties of the object, you can use a wildcard character.
-#### Example #
+#### Example #29
 ```powershell
 > Get-Process | Format-List –Property *
 
@@ -629,7 +750,7 @@ PM                         : 1961984
 NPM                        : 7832
 ```
 Alternatively, you can select just the properties you want.
-#### Example #
+#### Example #30
 ```powershell
 > Get-Process | Format-List –Property name,id
 
@@ -649,7 +770,7 @@ Name : atiesrxx
 Id   : 2084
 ```
 `Format-Table`, on the other hand, takes data and turns it into a table. Since our data from `Get-Process` is already in the form of a table, we can use it to easily choose properties we want displayed in the table. I used the AutoSize parameter to make all the data fit onto a single screen.
-#### Example #
+#### Example #31
 ```powershell
 > Get-Process | Format-Table name,id –AutoSize
 
@@ -666,9 +787,11 @@ bash                                              16564
 Brady.Tolling.DataServiceHost                     18236
 Brady.Tolling.ExplorerHost                        16040
 ```
-## Feature # - Filtering and Comparing
+<a name="filter_compare"/>
+
+## Feature #6 - Filtering and Comparing
 One of the best things about using an object-based pipeline is that you can filter objects out of the pipeline at any stage using the `Where-Object` cmdlet.
-#### Example #
+#### Example #32
 ```powershell
 > Get-Service | Where-Object {$_.Status -eq “Running”}
 
@@ -697,13 +820,16 @@ Using where object is actually very simple.
 * `like` (Wildcard String Match)
 
 A full list and more information can be viewed in the `about_comparison` conceptual help file, however it does take some time getting used to the `Where-Object` syntax. 
-#### Example #
+#### Example #33
 ```powershell
 > help about_comparison
 ```
-## Feature # - Display system processes one page at a time
+
+<a name="pagination"/>
+
+## Feature #7 - Display system processes one page at a time
 The `Out-Host` cmdlet sends output to the PowerShell host for display. The host displays the output at the command line. Because `Out-Host` is the default, you do not have to specify it unless you want to use its parameters to change the display.
-#### Example #
+#### Example #34
 ```powershell
 > Get-Process | Out-Host -Paging
 
@@ -723,11 +849,14 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
     214      20     5064       9864              3744   0 BuildService
 ```
 This command displays the processes on the system one page at a time. It uses the `Get-Process` cmdlet to get the processes on the system. The pipeline operator sends the results to `Out-Host` cmdlet, which displays them at the console. The `Paging` parameter displays one page of data at a time.
-## Feature # - Display session history
+
+<a name="display_history"/>
+
+## Feature #8 - Display session history
 Windows PowerShell itself keeps a history of the commands you’ve typed in the current PowerShell session. You can use several included cmdlets to view and work with your history.
 
 To view the history of commands you’ve typed, run the following cmdlet:
-#### Example #
+#### Example #35
 ```powershell
 > Get-History
 
@@ -739,14 +868,14 @@ To view the history of commands you’ve typed, run the following cmdlet:
    4 Get-Service -Name amd*  | Format-Wide
 ```
 You can search your history by piping the resulting output to the `Select-String` cmdlet and specifying the text you want to search for:    
-#### Example #
+#### Example #36
 ```powershell
 > Get-History |  Select-String -Pattern "Table"
 
 Get-Process | Format-Table name,id –AutoSize
 ```
 To view a more detailed command history that displays the execution status of each command along with its start and end times, run the following command:
-#### Example #
+#### Example #37
 ```powershell
 > Get-History | Format-List -Property *
 
@@ -764,7 +893,7 @@ StartExecutionTime : 25/08/2018 11:44:50
 EndExecutionTime   : 25/08/2018 11:44:51
 ```
 By default, the `Get-History` cmdlet only shows the **32** most recent history entries. If you want to view or search a larger number of history entries, use the `-Count` option to specify how many history entries PowerShell should show, like so:
-#### Example #
+#### Example #38
 ```powershell
 > Get-History -Count 1000
 > Get-History -Count 1000 | Select-String -Pattern "Table"
@@ -772,7 +901,7 @@ By default, the `Get-History` cmdlet only shows the **32** most recent history e
 ```
 ## Feature # - Run Commands From Your History
 To run a command from your history, use the following cmdlet, specifying the Id number of the history item as shown by the `Get-History` cmdlet. To run two commands from your history back to back, use `Invoke-History` twice on the same line, separated by a **semicolon**.
-#### Example #
+#### Example #39
 ```powershell
 > Invoke-History 1 ; Invoke-History 2
 Get-History
@@ -790,9 +919,11 @@ Get-History
    4 Get-History
 ```
 
-## Feature # - Save and Import Your PowerShell History
+<a name="save_import_history"/>
+
+## Feature #9 - Save and Import Your PowerShell History
 If you want to save the PowerShell command history for the current session so you can refer to it later, you can do so
-#### Example #
+#### Example #40
 ```powershell
 > Get-History | Export-Clixml -Path .\history.xml
 ```
@@ -800,15 +931,18 @@ This exports your command history as a detailed XML file complete with **“Star
 
 
 Once you’ve exported your PowerShell history to such an XML file, you (or anyone else you send the XML file to) can import it to another PowerShell session with the `Add-History` cmdlet:
-#### Example #
+#### Example #41
 ```powershell
 > Add-History -InputObject (Import-Clixml .\history.xml)
 ```
 If you run the `Get-History` cmdlet after importing such an XML file, you’ll see that the commands from the XML file were imported into your current PowerShell session’s history.
-## Feature # - Clear Your PowerShell History
+
+<a name="clear_history"/>
+
+## Feature #10 - Clear Your PowerShell History
 
 To clear the history of commands you’ve typed, run the following cmdlet:
-#### Example #
+#### Example #42
 ```powershell
 > Clear-History
 ```
@@ -817,16 +951,17 @@ Note that the command line buffer is separate from the PowerShell history. So, e
 PowerShell doesn’t remember your history between sessions. To erase both command histories for the current session, all you have to do is close the PowerShell window.
 
 If you’d like to clear the PowerShell window after clearing the history, you can do it by running the `Clear` command:
-#### Example #
+#### Example #43
 ```powershell
 > Clear
 ```
+<a name="enhanced_info"/>
 
-## Feature # - Get enhanced info by using Pipe Line
+## Feature #11 - Get Enhanced Info by using Pipe Line
 
 Let's get information for all running processes on our local computer and gets instances of WMI classes or information about the available classes for more detailed about each processes.
 
-#### Example #
+#### Example #44
 ```powershell
 > Get-Process -Name a* -PipelineVariable  Proc |  ForEach {
    Get-WmiObject  -Class Win32_Service  -ErrorAction SilentlyContinue  -Filter "ProcessID='$($Proc.Id)'" -PipelineVariable  Service |  ForEach {
@@ -858,9 +993,11 @@ Let's see what we done in **Example #22**:
 * `Format-Table` - view output in table style, for this type if will be `Format-List` default.
 * `-AutoSize` - indicates that the cmdlet adjusts the column size and number of columns based on the width of the data. By default, the column size and number are determined by the view.
 
-## Feature # - Truncating Parameters
+<a name="truncating_parameters"/>
+
+## Feature #12 - Truncating Parameters
 Windows PowerShell also allows you truncate parameter names up until the point where they become ambiguous, that is to say up until the point where PowerShell can no longer figure out which parameter you are talking about
-#### Example #
+#### Example #45
 ```powershell
 >  Get-Service -Name *sql* -ComputerName localhost
 Status   Name               DisplayName
@@ -882,13 +1019,17 @@ Running  SQLTELEMETRY$SQ... SQL Server CEIP service (SQLEXPRESS)
 Running  SQLWriter          SQL Server VSS Writer
 ```
 
-# Chapter #6 - First scripts
+<a name="scripts"/>
 
-## Feature # - Script policies
+# Chapter #5 - First scripts
+
+<a name="script_policies"/>
+
+## Feature #1 - Script policies
 
 Let's create  our first script in current directory. As code we will use simple `Write-Host` to display static text as output in our powershell window
 
-#### Example #
+#### Example #46
 ```powershell
 > echo 'Write-Host "Script, World!"' > 'First Script.ps1'
 > ls
@@ -919,7 +1060,7 @@ In order to prevent malicious scripts from running on your system, PowerShell en
 
 We could check current execution policy by `Get-ExecutionPolicy` command and set by `Set-ExecutionPolicy`.
 
-#### Example #
+#### Example #47
 ```powershell
 > Get-ExecutionPolicy
 RemoteSigned
@@ -938,13 +1079,15 @@ At line:1 char:1
 ```
 In order to change the execution policy, we will need to reopen PowerShell as an Administrator. The `Set-ExecutionPolicy` command will ask to verify that you really want to change the execution policy. Go ahead and select `Y` for yes, then go ahead and close and reopen your Powershell window.
 
-## Feature # - Using Variables to Store Objects
+<a name="use_vars"/>
+
+## Feature #2 - Using Variables to Store Objects
 PowerShell works with objects. PowerShell lets you create variables, essentially named objects, to preserve output for later use. If you are used to working with variables in other shells remember that PowerShell variables are objects, not text.
 
 Variables are always specified with the initial character `$`, and can include any alphanumeric characters or the underscore in their names.
 
 You can create a variable by typing a valid variable name
-#### Example #
+#### Example #48
 ```powershell
 > $cool
 ```
@@ -952,7 +1095,7 @@ This returns no result because `$cool` does not have a value. You can create a v
 > PowerShell only creates the variable if it does not exist; otherwise, it assigns the specified value to the existing variable. 
 
 To store your current location in the variable `$cool`, type:
-#### Example #
+#### Example #49
 ```powershell
 > $cool = Get-Location
 > $cool
@@ -962,7 +1105,7 @@ Path
 ~\powershell-live-talks
 ```
 You can use `Get-Member` to display information about the contents of variables. Piping `$cool` to `Get-Member` will show you that it is a `PathInfo` object, just like the output from `Get-Location`:
-#### Example #
+#### Example #50
 ```powershell
 > $cool | Get-Member -MemberType Property
 
@@ -977,7 +1120,7 @@ Provider     Property   System.Management.Automation.ProviderInfo Provider {get;
 ProviderPath Property   string ProviderPath {get;}
 ```
 PowerShell provides several commands to manipulate variables. You can see a complete listing in a readable form by typing:
-#### Example #
+#### Example #51
 ```powershell
 > Get-Command -Noun Variable | Format-Table -Property Name,Definition -AutoSize -Wrap
 
@@ -990,12 +1133,12 @@ Remove-Variable ...
 Set-Variable    ...
 ```
 In addition to the variables you create in your current PowerShell session, there are several system-defined variables. You can use the `Remove-Variable` cmdlet to clear out all of the variables which are not controlled by PowerShell. Type the following command to clear all variables:
-#### Example #
+#### Example #52
 ```powershell
 > Remove-Variable -Name * -Force -ErrorAction SilentlyContinue
 ```
 If you then run the Get-Variable cmdlet, you will see the remaining PowerShell variables. Since there is also a variable PowerShell drive, you can also display all PowerShell variables by typing:
-#### Example #
+#### Example #53
 ```powershell
 >  Get-Variable
 
@@ -1016,9 +1159,9 @@ args                           {}
 ...
 ```
 Although PowerShell is not Cmd.exe, it runs in a command shell environment and can use the same variables available in any environment in Windows. These variables are exposed through a drive named `env:`. You can view these variables by typing:
-#### Example #
+#### Example #54
 ```powershell
-> Get-ChildItem env:
+> Get-ChildItem env: 
 
 Name                           Value
 ----                           -----
@@ -1031,17 +1174,19 @@ CommonProgramFiles(x86)        C:\Program Files (x86)\Common Files
 ...
 ```
 Although the standard variable cmdlets are not designed to work with env: variables, you can still use them by specifying the `env:` prefix. For example, to see the operating system root directory, you can use the command-shell `%SystemRoot%` variable from within PowerShell by typing:
-#### Example #
+#### Example #55
 ```powershell
 > $env:SystemRoot
 C:\WINDOWS
 ```
 You can also create and modify environment variables from within PowerShell. Environment variables accessed from Windows PowerShell conform to the normal rules for environment variables elsewhere in Windows.
 
-## Feature # - Variable Types
+<a name="var_types"/>
+
+## Feature #3 - Variable Types
 
 You could define variables with spaces:
-#### Example #
+#### Example #56
 ```powershell
 > $simpleVariable = '#1';
 > ${simple Variable} = '#2';
@@ -1051,7 +1196,7 @@ You could define variables with spaces:
 #1
 ```
 Also there is a possibility to define strongly typed variable
-#### Example #
+#### Example #57
 ```powershell
 > [String]$MyName="Jason"
 > [int]$Oops="Jason"
@@ -1063,17 +1208,20 @@ At line:1 char:1
     + FullyQualifiedErrorId : RuntimeException
 ```
 Same as `Console.ReadLine` we could await for user input in PowerShell
-#### Example #
+#### Example #58
 ```powershell
 > [string]$ComputerName=Read-host "Enter Computer Name"
 Enter Computer Name: WorkPC
 > Write-Output $ComputerName
 WorkPC
 ```
-## Feature # - Quotation Marks
+
+<a name="quotation_marks"/>
+
+## Feature #4 - Quotation Marks
 
 In PowerShell we have inline variable resolving
-#### Example #
+#### Example #59
 ```powershell
 > $name = 'Bohdan'
 > "We could print $name as name of $name"
@@ -1096,9 +1244,11 @@ Finally, when you need to use an escape character, since those aren't parsed wit
 
 Apart from those three instances, it's generally considered a best practice to stick with single quotes. 
 
-## Feature # - If/Else Statement
+<a name="if_else"/>
+
+## Feature #5 - If/Else Statement
 Here is all simple, let's just look on examples:
-#### Example #
+#### Example #60
 ```powershell
 > $Status=(Get-service -name bits).status
 > If ($Status -eq "Running") {
@@ -1113,9 +1263,12 @@ Here is all simple, let's just look on examples:
      Write-Output "Service is already stopped"
  }
 ```
- ## Feature # - Switch
+
+<a name="switch"/>
+
+ ## Feature #6 - Switch
  Just the same, all should be clear from exmaples:
- #### Example #
+ #### Example #61
  ```powershell
  > [int] $status = Read-Host('Enter number between 0..4')
 Enter number between 0..4: 4
@@ -1130,9 +1283,12 @@ Enter number between 0..4: 4
 > $status_text
 empty
  ```
-## Feature - Loops(While,Do-While)
+
+<a name="loops"/>
+
+## Feature #7 - Loops(While,Do-While)
 And again short and self explained examples:
-#### Example #
+#### Example #62
 ```powershell
 > # Do loop
 > $i= 1
@@ -1159,35 +1315,53 @@ Workshops is sucks when 2 in one day
 ```
 Hope all is really clear)))
 
-## Feature - Foreach statement
+
+<a name="foreach"/>
+
+## Feature #8 - Foreach statement
 We already saw it. Not we will just look what forms it have:
-#### Example #
+#### Example #63
 ```powershell
 > # Foreach - used often in our scripting for today
 > $services = Get-Service
 > ForEach ($service in $services) {
-   $service.Displayname
+    $service.Displayname
  }
+ 
 Adobe Flash Player Update Service
 AllJoyn Router Service
 Application Layer Gateway Service
 ...
 > #For loop
 > For ($i=0;$i –lt 5;$i++) {
-  #do something
+    $services[$i].Displayname
  }
->
+
+Adobe Flash Player Update Service
+AllJoyn Router Service
+Application Layer Gateway Service
+...
 > #Another way
 > 1..5 | ForEach-Object -process {
-     Start calc
+    $services[$_].DisplayName
  }
+
+Adobe Flash Player Update Service
+AllJoyn Router Service
+Application Layer Gateway Service
+...
 ```
-## Feature # - Complete Template
+
+<a name="template"/>
+
+## Feature #9 - Complete Template
 This is not feature - this is just complete template of availbale parameters and help description for functions
 
 It's loceted at [CompleteTemplate.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/CompleteTemplate.ps1)
 
-## Feature # - Common Parameter in Powershell
+<a name=""/>
+
+## Feature #10 - Common Parameterі in Powershell
 
 The example below will use `Get-Service` to get a list of all of the services on my computer and then sort that list by the `State` property. What we will see this time will not be an accurate representation the output that we were expecting.
 #### Example #
@@ -1789,305 +1963,3 @@ sometext
 ## 2. Usage tips
 
 ## Feature # - [ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
-
-
-# Example Links:
-* [1](#1)
-* [2](#2)
-* [3](#3)
-* [4](#4)
-* [5](#5)
-* [6](#6)
-* [7](#7)
-* [8](#8)
-* [9](#9)
-* [10](#10)
-* [11](#11)
-* [12](#12)
-* [13](#13)
-* [14](#14)
-* [15](#15)
-* [16](#16)
-* [17](#17)
-* [18](#18)
-* [19](#19)
-* [20](#20)
-* [21](#21)
-* [22](#22)
-* [23](#23)
-* [24](#24)
-* [25](#25)
-* [26](#26)
-* [27](#27)
-* [28](#28)
-* [29](#29)
-* [30](#30)
-* [31](#31)
-* [32](#32)
-* [33](#33)
-* [34](#34)
-* [35](#35)
-* [36](#36)
-* [37](#37)
-* [38](#38)
-* [39](#39)
-* [40](#40)
-* [41](#41)
-* [42](#42)
-* [43](#43)
-* [44](#44)
-* [45](#45)
-* [46](#46)
-* [47](#47)
-* [48](#48)
-* [49](#49)
-* [50](#50)
-* [51](#51)
-* [52](#52)
-* [53](#53)
-* [54](#54)
-* [55](#55)
-* [56](#56)
-* [57](#57)
-* [58](#58)
-* [59](#59)
-* [60](#60)
-* [61](#61)
-* [62](#62)
-* [63](#63)
-* [64](#64)
-* [65](#65)
-* [66](#66)
-* [67](#67)
-* [68](#68)
-* [69](#69)
-* [70](#70)
-* [71](#71)
-* [72](#72)
-* [73](#73)
-* [74](#74)
-* [75](#75)
-* [76](#76)
-* [77](#77)
-* [78](#78)
-* [79](#79)
-* [80](#80)
-* [81](#81)
-* [82](#82)
-* [83](#83)
-* [84](#84)
-* [85](#85)
-* [86](#86)
-* [87](#87)
-* [88](#88)
-* [89](#89)
-* [90](#90)
-* [91](#91)
-* [92](#92)
-* [93](#93)
-* [94](#94)
-* [95](#95)
-* [96](#96)
-* [97](#97)
-* [98](#98)
-* [99](#99)
-* [100](#100)
-* [101](#101)
-* [102](#102)
-* [103](#103)
-* [104](#104)
-* [105](#105)
-* [106](#106)
-* [107](#107)
-* [108](#108)
-* [109](#109)
-* [110](#110)
-* [111](#111)
-* [112](#112)
-* [113](#113)
-* [114](#114)
-* [115](#115)
-* [116](#116)
-* [117](#117)
-* [118](#118)
-* [119](#119)
-* [120](#120)
-* [121](#121)
-* [122](#122)
-* [123](#123)
-* [124](#124)
-* [125](#125)
-* [126](#126)
-* [127](#127)
-* [128](#128)
-* [129](#129)
-* [130](#130)
-* [131](#131)
-* [132](#132)
-* [133](#133)
-* [134](#134)
-* [135](#135)
-* [136](#136)
-* [137](#137)
-* [138](#138)
-* [139](#139)
-* [140](#140)
-* [141](#141)
-* [142](#142)
-* [143](#143)
-* [144](#144)
-* [145](#145)
-* [146](#146)
-* [147](#147)
-* [148](#148)
-* [149](#149)
-* [150](#150)
-* [151](#151)
-* [152](#152)
-* [153](#153)
-* [154](#154)
-* [155](#155)
-* [156](#156)
-* [157](#157)
-* [158](#158)
-* [159](#159)
-* [160](#160)
-* [161](#161)
-* [162](#162)
-* [163](#163)
-* [164](#164)
-* [165](#165)
-* [166](#166)
-* [167](#167)
-* [168](#168)
-* [169](#169)
-* [170](#170)
-* [171](#171)
-* [172](#172)
-* [173](#173)
-* [174](#174)
-* [175](#175)
-* [176](#176)
-* [177](#177)
-* [178](#178)
-* [179](#179)
-* [180](#180)
-* [181](#181)
-* [182](#182)
-* [183](#183)
-* [184](#184)
-* [185](#185)
-* [186](#186)
-* [187](#187)
-* [188](#188)
-* [189](#189)
-* [190](#190)
-* [191](#191)
-* [192](#192)
-* [193](#193)
-* [194](#194)
-* [195](#195)
-* [196](#196)
-* [197](#197)
-* [198](#198)
-* [199](#199)
-* [200](#200)
-* [201](#201)
-* [202](#202)
-* [203](#203)
-* [204](#204)
-* [205](#205)
-* [206](#206)
-* [207](#207)
-* [208](#208)
-* [209](#209)
-* [210](#210)
-* [211](#211)
-* [212](#212)
-* [213](#213)
-* [214](#214)
-* [215](#215)
-* [216](#216)
-* [217](#217)
-* [218](#218)
-* [219](#219)
-* [220](#220)
-* [221](#221)
-* [222](#222)
-* [223](#223)
-* [224](#224)
-* [225](#225)
-* [226](#226)
-* [227](#227)
-* [228](#228)
-* [229](#229)
-* [230](#230)
-* [231](#231)
-* [232](#232)
-* [233](#233)
-* [234](#234)
-* [235](#235)
-* [236](#236)
-* [237](#237)
-* [238](#238)
-* [239](#239)
-* [240](#240)
-* [241](#241)
-* [242](#242)
-* [243](#243)
-* [244](#244)
-* [245](#245)
-* [246](#246)
-* [247](#247)
-* [248](#248)
-* [249](#249)
-* [250](#250)
-* [251](#251)
-* [252](#252)
-* [253](#253)
-* [254](#254)
-* [255](#255)
-* [256](#256)
-* [257](#257)
-* [258](#258)
-* [259](#259)
-* [260](#260)
-* [261](#261)
-* [262](#262)
-* [263](#263)
-* [264](#264)
-* [265](#265)
-* [266](#266)
-* [267](#267)
-* [268](#268)
-* [269](#269)
-* [270](#270)
-* [271](#271)
-* [272](#272)
-* [273](#273)
-* [274](#274)
-* [275](#275)
-* [276](#276)
-* [277](#277)
-* [278](#278)
-* [279](#279)
-* [280](#280)
-* [281](#281)
-* [282](#282)
-* [283](#283)
-* [284](#284)
-* [285](#285)
-* [286](#286)
-* [287](#287)
-* [288](#288)
-* [289](#289)
-* [290](#290)
-* [291](#291)
-* [292](#292)
-* [293](#293)
-* [294](#294)
-* [295](#295)
-* [296](#296)
-* [297](#297)
-* [298](#298)
-* [299](#299)
