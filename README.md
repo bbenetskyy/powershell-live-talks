@@ -48,7 +48,7 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
     7. [Loops(While,Do-While)](#loops)
     8. [Foreach statement](#foreach)
     9. [Complete Template](#template)
-    10. 
+    10. [Common Parameters in Powershell](#common_params)
 6. [Modules and Functions](#functions)
 7. [Killer Features](#features)
 8. [Real World Examples](#examples)
@@ -147,13 +147,12 @@ get-help about_fuctions_advanced_parameters | clip
 
 $x.pstypenme
 
-
+#ps env wars about_environment_variables
 Set-Location Env:;
 Get-ChildItem; 
-
-
+#
 Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")
-
+#
 Add-Content -Path $Profile.CurrentUserAllHosts -Value '$Env:Path = `
 $Env:Path + ";C:\Temp"'
 ```
@@ -161,9 +160,6 @@ $Env:Path + ";C:\Temp"'
 [Jeff Hicks](https://github.com/jdhitsolutions)
 
 https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
-
-1. [ Description. ](#desc)
-2. [ Usage tips. ](#usage)
 
 <a name="intro"/>
 
@@ -1359,12 +1355,12 @@ This is not feature - this is just complete template of availbale parameters and
 
 It's loceted at [CompleteTemplate.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/CompleteTemplate.ps1)
 
-<a name=""/>
+<a name="common_params"/>
 
-## Feature #10 - Common Parameterі in Powershell
+## Feature #10 - Common Parameters in Powershell
 
 The example below will use `Get-Service` to get a list of all of the services on my computer and then sort that list by the `State` property. What we will see this time will not be an accurate representation the output that we were expecting.
-#### Example #
+#### Example #64
 ```powershell
 > Get-Service -PipelineVariable  Service |  Sort-Object -Property  State |  ForEach {
 
@@ -1393,7 +1389,7 @@ The last item in the pipeline is saved to the pipeline variable due to the aggre
 Building a function that allows you to make use of this parameter is easier than you think! The key component when you build your function or script is to include the cmdlet binding attribute that defines your function as an advanced function and opens up this parameter (as well as other common parameters). You can quickly verify this by looking at the command syntax.
 
 #### Without cmdletbinding:
-#### Example #
+#### Example #65
 ```powershell
 > Function Test-Function  {
 
@@ -1409,7 +1405,7 @@ Building a function that allows you to make use of this parameter is easier than
 Test-Function [[-Data] <string[]>]
 ```
 ####  With cmdletbinding:
-#### Example #
+#### Example #66
 ```powershell
 > Function Test-Function  {
 
@@ -1430,7 +1426,7 @@ You can see that the `CommandParameter` label is used on the function that inclu
 
 Once you have done this then you can begin building out your function. The process to do this is a little quirky, for a lack of better words. I found that supporting the pipeline in the function using more traditional means like the Process block only seems to send the first item in the pipeline to the variable as shown below.
 
-#### Example #
+#### Example #67
 ```powershell
 > Function Test-Function  {
 
@@ -1459,7 +1455,7 @@ Once you have done this then you can begin building out your function. The proce
 1
 ```
 This does work as expected when using the named parameter
-#### Example #
+#### Example #68
 ```powershell
 > Test-Function -Data (1..5) -PipelineVariable  t | ForEach {$t}
 1
@@ -1469,7 +1465,7 @@ This does work as expected when using the named parameter
 5
 ```
 So how in the world can we make this support pipeline input? Well, we can make use of an automatic variable called `$Input` which takes in all of the pipeline input and treats it like a collection. It can even be placed in the `Begin` block and it will have all of the pipeline data! This variable does have a different meaning when you are not supporting pipeline input and another catch is that you cannot have a Process block with your pipeline support because it then becomes the single item in the Process block (like `$_` and `$PSItem`).
-#### Example #
+#### Example #69
 ```powershell
 > Function Test-Function  {
 
