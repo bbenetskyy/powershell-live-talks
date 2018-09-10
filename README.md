@@ -50,6 +50,18 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
     9. [Complete Template](#template)
     10. [Common Parameters in Powershell](#common_params)
 6. [Modules and Functions](#functions)
+    1. [Functions](#f_functions)
+    2. [Multifunction in one file](#multi_function)
+    3. [Script Invoking from the files](#script_from_file)
+    4. [Variable Availability in Functions](#vars_at_functions)
+    5. [Begin, Process and End of Function life cycle](#begin_process_end)
+    6. [Help Message](#help_message)
+    7. [Aliases](#aliases)
+    8. [Validate Set](#validate_set)
+    9. [Validate Pattern](#validate_pattern)
+    10. [Try/Catch](#try_catch)
+    11. [Support Should Process](#should_process)
+    12. [Modules](#modules)
 7. [Killer Features](#features)
 8. [Real World Examples](#examples)
 
@@ -1491,11 +1503,15 @@ PS C:\Users\bbenetskyi> 1..5|Test-Function -PipelineVariable  t|ForEach{$t}
 ```
 `cmdletbinding` - provide the ability to use `Write-Verbose` and `Write-Debug` in your script or function, and have their output controlled by `-Verbose` and `-Debug` parameters of that script or function. 
 
+<a name="functions"/>
+
 # Chapter #6 - Modules and Functions
 
-## Feature # - Functions
+<a name="f_functions"/>
+
+## Feature #1 - Functions
 Hmm, what is function? We could check it as enhanced PowerShell users:
-#### Example #
+#### Example #70
 ```powershell
 > help about_functions
 LONG DESCRIPTION
@@ -1505,12 +1521,12 @@ LONG DESCRIPTION
     prompt.
 ```
 How looks like functions?
-#### Example #
+#### Example #71
 ```powershell
 >help about_functions -examples
 ```
 Now let's define simple function which checks [disk info](https://github.com/bbenetskyy/powershell-live-talks/blob/master/DiskInfo.ps1) for some computer.
-#### Example #
+#### Example #72
 ```powershell
 "Function Get-DiskInfo{
 
@@ -1538,9 +1554,11 @@ PSComputerName DeviceID Size(GB) Free(GB)
 BBENETSKYY     C:            488      239
 ```
 
-## Feature # - Multifunctions in one file
+<a name="multi_function"/>
+
+## Feature #2 - Multifunction in one file
 Also we could define couple functions in one `ps1` script file. Just plate couple functions in one file:
-#### Example #
+#### Example #73
 ```powershell
 > "Function Function1 { Write-Output 'Call functon #1' }
  Function Function2 { Write-Output 'Call functon #2' }
@@ -1556,12 +1574,14 @@ Call functon #2
 Call functon #3
 ```
 
-## Feature # - Script Invoking from files
+<a name="script_from_file"/>
+
+## Feature #3 - Script Invoking from the files
 
 Here are listed available mehtods for invoke your function in current powreshell window.
 But before let's create [SelfDescribed.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/SelfDescribed.ps1):
 
-#### Example #
+#### Example #74
 ```powershell
 > more .\SelfDescribed.ps1
 Write-Host "Loading functions"
@@ -1646,7 +1666,9 @@ At line:1 char:1
     + FullyQualifiedErrorId : CommandNotFoundException
 ```
 
-## Feature # - Variable Availability in Functions
+<a name="vars_at_functions"/>
+
+## Feature #4 - Variable Availability in Functions
 
 When you first assign a value to a variable (initialize it) in a script, the variable is only available within the script and not on the console where you launched the script. Likewise, if you define a variable in a function, you cannot access its value at the script level where you called the function. The variable’s scope is responsible for this behavior; it determines where the variable is available.
 
@@ -1654,7 +1676,7 @@ When you first assign a value to a variable (initialize it) in a script, the var
 
 Variables defined in a child scope are unavailable in the parent scope. However, in the child scope, you have read access to variables initialized in the parent scope. Read access reaches down to all lower levels.
 
-#### Example #
+#### Example #75
 ```powershell
 > $Script = "Script scope"
 > function myFunction {
@@ -1670,14 +1692,14 @@ Script scope
 ```
 
 You can change this default behavior of PowerShell by using scope modifiers. The four available modifiers correspond to the absolute scopes mentioned above: `Private`, `Local`, `Script`, and `Global`. The command below creates a variable in a `Private` scope:
-#### Example #
+#### Example #76
 ```powershell
 > $Private:internal = "Hidden!!!"
 ```
 This ensures that the variable can only be accessed in its Local scope (the scope where you defined it) and not in its child scopes.
 
 In the example below, both variables are defined in the function, but only the one with the Script modifier is available at the script level:
-#### Example #
+#### Example #77
 ```powershell
 > function scopeFunction {
       $Script:ScriptScope = "Created in the Script Scope"
@@ -1689,14 +1711,16 @@ Created in the Script Scope
 > $FunctionScope
 ```
 Alternatively, you can use the `New-Variable` cmdlet to create a variable with the `AllScope` property:
-#### Example #
+#### Example #78
 ```powershell
 > New-Variable -Name coolVar -Option AllScope -Value "Available in all child scopes" 
 > $coolVar
 Available in all child scopes
 ```
 
-## Feature # - Begin, Process and End of Function lifecycle
+<a name="begin_process_end"/>
+
+## Feature #5 - Begin, Process and End of Function life cycle
 
 For functions and script cmdlets, three methods are available for processing pipeline input: `Begin`, `Process`, and `End` blocks. In these blocks, the `$_` variable represents the current input object.
 
@@ -1716,7 +1740,7 @@ Also, if the function/cmdlet supports confirmation requests (the `-SupportsShoul
 ## End
 This block is used to provide optional one-time post-processing for the function.
 
-#### Example #
+#### Example #79
 ```powershell
 > . .\FunctionWithSteps1.ps1 -force
 > 1..10|Show-Numbers
@@ -1756,7 +1780,9 @@ OS Build                       17134
 VERBOSE: Completed in 57.2333
 ```
 
-## Feature # - Help Mesage
+<a name="help_message"/>
+
+## Feature #6 - Help Message
 
 You could get more information [about help messsages](https://powershell.org/2013/05/06/a-helpful-message-about-helpmessage/) from that site.
 
@@ -1764,7 +1790,7 @@ Here I just post important message from there:
 
 >**Don't use it!** Users can't see it. It does no harm, but it has no value. Danger lurks in writing a HelpMessage instead of writing help that users can see. Write help that Get-Help gets, that is, XML help or comment-based help.
 
-#### Example #****
+#### Example #80
 ```powershell
   [Parameter(
             Mandatory = $true,
@@ -1773,7 +1799,7 @@ Here I just post important message from there:
   [int] $Number
 ```
 If you want to be helpful, the correct way to provide help for a parameter in a script or function is this:
-#### Example #
+#### Example #81
 ```powershell
 <#
 .PARAMETER  Number
@@ -1782,10 +1808,12 @@ If you want to be helpful, the correct way to provide help for a parameter in a 
 #>
 ```
 
-## Feature # - Aliases
+<a name="aliases"/>
+
+## Feature #7 - Aliases
 The `Set-Alias` cmdlet creates or changes an alias (alternate name) for a cmdlet or for a command element, such as a function, a script, a file, or other executable. You can also use `Set-Alias` to reassign a current alias to a new command, or to change any of the properties of an alias, such as its description. Unless you add the alias to the PowerShell profile, the changes to an alias are lost when you exit the session or close PowerShell.
 
-#### Example #
+#### Example #82
 ```powershell
 #[Alias('Host')] 
 > . .\FunctionWithSteps2.ps1 -force
@@ -1811,10 +1839,13 @@ OS Build                       17134
 VERBOSE: Completed in 73.039
 
 ```
-## Feature # - Validate Set
+
+<a name="validate_set"/>
+
+## Feature #8 - Validate Set
 
 Let's import function which print most important names from [South Park](https://github.com/bbenetskyy/powershell-live-talks/blob/master/SouthPark.ps1)
-#### Example #
+#### Example #83
 ```powershell
 > 'Stan', 'Kyle', 'Kenny', 'Eric' | Show-Names # Show-Names -Name 'Stan'
 WARNING: Stan
@@ -1837,9 +1868,11 @@ At line:1 char:50
     + FullyQualifiedErrorId : ParameterArgumentValidationError,Show-Names
 ```
 
-## Feature # - Validate Pattern
+<a name="validate_pattern"/>
+
+## Feature #9. - Validate Pattern
 Let's ping some ip addresses with [PingIp.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/PingIp.ps1) script:
-#### Example #
+#### Example #84
 ```powershell
 > . .\PingIp.ps1
 > '8.8.8.8' | Ping-Ip
@@ -1856,9 +1889,11 @@ Approximate round trip times in milli-seconds:
     Minimum = 8ms, Maximum = 12ms, Average = 9ms
 ```
 
-## Feature # - Try/Catch
+<a name="try_catch"/>
+
+## Feature #10 - Try/Catch
 Let's import [TryCatch](https://github.com/bbenetskyy/powershell-live-talks/blob/master/TryCatch.ps1) function and test how it works:
-#### Example #
+#### Example #85
 ```powershell
 > 'bbenetskyy' |Get-CompInfo -Verbose
 VERBOSE: Begin
@@ -1898,17 +1933,21 @@ to Stop: The RPC server is unavailable. (Exception from HRESULT: 0x800706BA)
 
 ```
 
-## Feature # - Support Should Process
+<a name="should_process"/>
+
+## Feature #11 - Support Should Process
 
 All this really good explained at [Supports Should](https://becomelotr.wordpress.com/2013/05/01/supports-should-process-oh-really/) article. Here we will just try that examples from [ShouldProcess.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/ShouldProcess.ps1):
-#### Example #
+#### Example #86
 ```powershell
 > ls *.ps1 | Test-ShouldProcess -Destination .\ -Confirm
 > ls *.ps1 | Test-ShouldProcessEx -Destination .\ -Confirm
 ```
 Atricle about [Confirm Impact](https://4sysops.com/archives/confirm-confirmpreference-and-confirmimpact-in-powershell/) at PowerShell parameters.
 
-## Feature # - Modules
+<a name="modules"/>
+
+## Feature # 12- Modules
 Typically, Windows PowerShell scripts are saved as **ps1** files. However, if a file is saved as a **psm1** file, it can be treated as a **module**.
 
 Sometimes you may have utility functions in your module that should stay internal to the module and not be made available to other scripts. If you want to have public and internal functions, you will need to use `Export-ModuleMember` in the **psm1** file to define the exported public functions.
@@ -1950,12 +1989,5 @@ https://www.pdq.com/blog/powershell-get-cpu-usage-for-a-process-using-get-counte
 ## Feature # - Create Shortcuts on User Desktops using Powershell
 https://www.pdq.com/blog/pdq-deploy-and-powershell/
 
-<a name="desc"></a>
-## 1. Description
-
-sometext
-
-<a name="usage"></a>
-## 2. Usage tips
 
 ## Feature # - [ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
