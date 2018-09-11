@@ -62,6 +62,7 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
     10. [Try/Catch](#try_catch)
     11. [Support Should Process](#should_process)
     12. [Modules](#modules)
+    13. [Background Jobs](#background_jobs)
 7. [Killer Features](#features)
 8. [Real World Examples](#examples)
 
@@ -1952,16 +1953,37 @@ Typically, Windows PowerShell scripts are saved as **ps1** files. However, if a 
 
 Sometimes you may have utility functions in your module that should stay internal to the module and not be made available to other scripts. If you want to have public and internal functions, you will need to use `Export-ModuleMember` in the **psm1** file to define the exported public functions.
 
+<a name="background_jobs"/>
+
+## Feature #13 - Background Jobs
+
+#### Example #87
+```powershell
+> Start-Job {param() Import-Module C:\Users\bbenetskyi\Desktop\powershell-live-talks\SouthPark.ps1; "kenny"|show-names} -Arg $PSScriptRoot
+
+Id     Name            PSJobTypeName   State         HasMoreData     Location
+--     ----            -------------   -----         -----------     --------
+11     Job11           BackgroundJob   Running       True            localhost
 
 
-## Feature # - Background Jobs on Modules
+PS C:\Users\bbenetskyi\Desktop\powershell-live-talks> Get-Job 11
 
-Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot
+Id     Name            PSJobTypeName   State         HasMoreData     Location
+--     ----            -------------   -----         -----------     --------
+11     Job11           BackgroundJob   Completed     True            localhost
 
+
+PS C:\Users\bbenetskyi\Desktop\powershell-live-talks> Receive-Job 11
+kenny
+WARNING: Oh, my God! They killed Kenny! - You Busters!
+
+```
 
 The `Start-Job` cmdlet starts a PowerShell background job on the local computer.
 
 A PowerShell background job runs a command without interacting with the current session. When you start a background job, a job object returns immediately, even if the job takes an extended time to finish. You can continue to work in the session without interruption while the job runs.
+
+
 
 https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
 
