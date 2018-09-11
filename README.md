@@ -69,14 +69,6 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 
 <a name=""/>
 
-dir variable:*pref* *error*
-erroraction.ps1
-
-write-eventlog -logname application -source sd
-
-$WhatIfPreference 
-$ConfirmPreference = 'medium
-$pscmdlet.shouldprocess("$c","messitup"){ write-ouytput}
 get-command -module mytools
 
 
@@ -1933,6 +1925,7 @@ to Stop: The RPC server is unavailable. (Exception from HRESULT: 0x800706BA)
 All this really good explained at [Supports Should](https://becomelotr.wordpress.com/2013/05/01/supports-should-process-oh-really/) article. Here we will just try that examples from [ShouldProcess.ps1](https://github.com/bbenetskyy/powershell-live-talks/blob/master/ShouldProcess.ps1):
 #### Example #86
 ```powershell
+> # -Confirm --> $ConfirmPreference = 'Low'
 > ls *.ps1 | Test-ShouldProcess -Destination .\ -Confirm
 > ls *.ps1 | Test-ShouldProcessEx -Destination .\ -Confirm
 ```
@@ -1989,8 +1982,23 @@ Here will be shown one huge example with explanation near each cool feature:
 >###
 > Test-Path -Path $path # return True if path exist or valid(-IsValid) and False if not
 >###
-> 
+> New-EventLog –LogName Application –Source “My Script” #create event log
+> Write-EventLog –LogName Application –Source “My Script” –EntryType Information –EventID 1 #write new event
+
+cmdlet Write-EventLog at command pipeline position 1
+Supply values for the following parameters:
+Message: age “This is a test message.”
+> #you could see it in Event Viewer
+>###
+> $ConfirmPreference = 'medium'#setup the minimum confirmation level 
+>###
+> Show-Command Show-Names #open window with all properties, if you will click Run -> it will paste created command into invoked powershell window
+>###
+
 ```
+[$WhatIfPreference = $true](https://blogs.technet.microsoft.com/heyscriptingguy/2011/11/21/make-a-simple-change-to-powershell-to-prevent-accidents/)
+
+[About Preference Variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-6)
 
 https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
 

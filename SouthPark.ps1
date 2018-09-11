@@ -1,5 +1,5 @@
 Function Show-Names {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     Param(
         [Parameter(Mandatory = $True,
             ValueFromPipeline = $true
@@ -13,7 +13,9 @@ Function Show-Names {
         foreach ($n in $Name) {            
             Write-Output $n
             if($n -eq 'Kenny'){
+                if($PSCmdlet.ShouldProcess($Name,'We are going to kill Kenny!')) {
                 Write-Warning 'Oh, my God! They killed Kenny! - You Busters!'
+                }
             }
         }
     }
