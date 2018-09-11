@@ -67,31 +67,8 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 8. [Real World Examples](#examples)
 
 
-<a name=""/>
 
-get-command -module mytools
-
-
-show-command new-modulemanifest
 ```powershell
-
-
-$x -ShowWindow
-
-
-show-object  $x
-
-
-new-object -type FileResource
-[FileResource]::new()
-[string]::new
-
-
-[ValidateSet('2','3')]
-
-
-get-w*e*e
-
 
 about_PSModule.help.txt
 
@@ -1994,11 +1971,34 @@ Message: age “This is a test message.”
 >###
 > Show-Command Show-Names #open window with all properties, if you will click Run -> it will paste created command into invoked powershell window
 >###
-
+> Get-Command -Module PSVirtualBox #where PSVirtualBox is name of my local module
+>###
+> Get-Help Get-Service -ShowWindow # open window with all help and with search
+>###
+> new-object -type string -ArgumentList 's'
+s
+> [string]::new('s')
+s
+>###
+> $a,$b,$c = Get-Service # $a == 1; $b == 2; $c == all other
+>###
+>$c.CanStop # == call prop in each and list a result list
+>###
+> get-w*e*e #and press tab, it will replace regex with mathed commands
+>###
+>
 ```
 [$WhatIfPreference = $true](https://blogs.technet.microsoft.com/heyscriptingguy/2011/11/21/make-a-simple-change-to-powershell-to-prevent-accidents/)
 
 [About Preference Variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-6)
+
+[Spelunking with Show-Object](https://blogs.technet.microsoft.com/heyscriptingguy/2015/10/26/spelunking-with-show-object/)
+
+[More about Classes](https://github.com/bbenetskyy/PowerShell-Classes)
+
+<a name="examples"/>
+
+# Chapter #8 - Real World Examples 
 
 https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
 
