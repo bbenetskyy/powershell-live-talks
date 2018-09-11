@@ -69,13 +69,6 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 
 <a name=""/>
 
-
-
-test-path!!!!!
-
-<#
-help and also abowe the  parameters # help 
-#>
 dir variable:*pref* *error*
 erroraction.ps1
 
@@ -89,7 +82,6 @@ get-command -module mytools
 
 show-command new-modulemanifest
 ```powershell
-ii .
 
 
 $x -ShowWindow
@@ -1953,6 +1945,8 @@ Typically, Windows PowerShell scripts are saved as **ps1** files. However, if a 
 
 Sometimes you may have utility functions in your module that should stay internal to the module and not be made available to other scripts. If you want to have public and internal functions, you will need to use `Export-ModuleMember` in the **psm1** file to define the exported public functions.
 
+> $Home\Documents\WindowsPowerShell\Scripts - here located all auto-installed modules in **their folders**.
+
 <a name="background_jobs"/>
 
 ## Feature #13 - Background Jobs
@@ -1983,7 +1977,20 @@ The `Start-Job` cmdlet starts a PowerShell background job on the local computer.
 
 A PowerShell background job runs a command without interacting with the current session. When you start a background job, a job object returns immediately, even if the job takes an extended time to finish. You can continue to work in the session without interruption while the job runs.
 
+<a name="features"/>
 
+# Chapter #7 - Killer Features
+
+Here will be shown one huge example with explanation near each cool feature:
+#### Example #88
+```powershell
+> $path = 'C:\Windows\System32\'
+> ii $path #open at explorer folder or file at path
+>###
+> Test-Path -Path $path # return True if path exist or valid(-IsValid) and False if not
+>###
+> 
+```
 
 https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
 
