@@ -68,73 +68,6 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
 
 
 
-```powershell
-
-about_PSModule.help.txt
-
-
-$a,$b,$c = get-* # $a == 1; $b == 2; $c == all other
-
-
-$c.prop == call prop in each and list a result list
-
-
-gps [a-r]*[g-p]* | stop-process -WhatIf
-
-
-stop-process -name lsass
-
-
-import-module -name psscript*
-
-
-get-command -module psscri*
-
-
-invoke-scriptanalyzer -path test.ps1
-
-
-New-Module 
-
-
-[switch]test == -test
-
-
-ALWAYS NON PLURAL NAMES
-
-
-Param (
-        [parameter(ValueFromPipelineByPropertyName)]
-        [Alias('IPAddress','__Server','CN')]
-        [string[]]$Computername
-    )
-
-
-get-help about_fuctions_advanced_parameters | clip
-
-
-#he->tab
-| ft -View #==format-list
-
-| ft-view priority
-
-
-$x.pstypenme
-
-#ps env wars about_environment_variables
-Set-Location Env:;
-Get-ChildItem; 
-#
-Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")
-#
-Add-Content -Path $Profile.CurrentUserAllHosts -Value '$Env:Path = `
-$Env:Path + ";C:\Temp"'
-```
-
-[Jeff Hicks](https://github.com/jdhitsolutions)
-
-https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
-
 <a name="intro"/>
 
 # Chapter #1 - Intro
@@ -1985,8 +1918,28 @@ s
 >$c.CanStop # == call prop in each and list a result list
 >###
 > get-w*e*e #and press tab, it will replace regex with mathed commands
+> gps [a-r]*[g-p]* | Stop-Process -WhatIf # same in args
 >###
->
+> Install-Module -Name PSScriptAnalyzer #is a static code checker for Windows PowerShell modules and scripts. 
+> Invoke-ScriptAnalyzer -path .\SouthPark.ps1
+
+RuleName                            Severity     ScriptName Line  Message
+--------                            --------     ---------- ----  -------
+PSUseSingularNouns                  Warning      SouthPark. 1     The cmdlet 'Show-Names' uses a plural noun. A singular noun
+                                                 ps1              should be used instead.
+PSAvoidTrailingWhitespace           Information  SouthPark. 11    Line has trailing whitespace
+                                                 ps1
+PSAvoidTrailingWhitespace           Information  SouthPark. 13    Line has trailing whitespace
+                                                 ps1
+>###
+>#  [Alias('IPAddress','__Server','CN')]
+>###
+>#ps env wars about_environment_variables
+>Set-Location Env:;
+>Get-ChildItem; 
+>Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")
+>Add-Content -Path $Profile.CurrentUserAllHosts -Value '$Env:Path = `
+$Env:Path + ";C:\Temp"'
 ```
 [$WhatIfPreference = $true](https://blogs.technet.microsoft.com/heyscriptingguy/2011/11/21/make-a-simple-change-to-powershell-to-prevent-accidents/)
 
@@ -1996,35 +1949,66 @@ s
 
 [More about Classes](https://github.com/bbenetskyy/PowerShell-Classes)
 
+[PSScriptAnalyzer ](https://github.com/PowerShell/PSScriptAnalyzer)
+
 <a name="examples"/>
 
 # Chapter #8 - Real World Examples 
 
+[Jeff Hicks](https://github.com/jdhitsolutions)
+
+https://docs.microsoft.com/en-us/powershell/dsc/pullserversmb
+
 https://blogs.technet.microsoft.com/heyscriptingguy/2012/12/31/using-windows-powershell-jobs/
 
-## Feature # - How to create your first PowerShell Module Command
-https://sid-500.com/2017/11/10/powershell-functions-how-to-create-your-first-powershell-module-command/
 
-## Feature # - How And When To Create And Use PowerShell Modules
-http://www.tomsitpro.com/articles/powershell-modules,2-846.html
+[How to create your first PowerShell Module Command](https://sid-500.com/2017/11/10/powershell-functions-how-to-create-your-first-powershell-module-command/)
 
 
-## Feature # - Sending Email With Send-MailMessage (Gmail example)
-Start-Job {param($scriptdir) Import-Module $scriptdir\Utils.psm1; ...} -Arg $PSScriptRoot
+[How And When To Create And Use PowerShell Modules](http://www.tomsitpro.com/articles/powershell-modules,2-846.html)
 
 
-
-New-Module
-
-
-## Feature # - How to zip up files using .NET and Add-Type
-https://www.pdq.com/blog/powershell-zip-up-files-using-.net-and-add-type/
-
-## Feature # - Get CPU Usage for a Process Using Get-Counter
-https://www.pdq.com/blog/powershell-get-cpu-usage-for-a-process-using-get-counter/
-
-## Feature # - Create Shortcuts on User Desktops using Powershell
-https://www.pdq.com/blog/pdq-deploy-and-powershell/
+[Sending Email With Send-MailMessage (Gmail example)](https://www.pdq.com/blog/powershell-send-mailmessage-gmail/)
 
 
-## Feature # - [ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
+[How to zip up files using .NET and Add-Type](https://www.pdq.com/blog/powershell-zip-up-files-using-.net-and-add-type/)
+
+
+[Get CPU Usage for a Process Using Get-Counter](https://www.pdq.com/blog/powershell-get-cpu-usage-for-a-process-using-get-counter/)
+
+#### Example #89
+```powershell
+> Get-Counter | Out-Host -Paging
+
+Timestamp                 CounterSamples
+---------                 --------------
+12/09/2018 13:44:56       \\bbenetskyi-rze\network interface(intel[r] ethernet connection i217-lm)\bytes total/sec :
+                          13507.2234082924
+
+                          \\bbenetskyi-rze\processor(_total)\% processor time :
+                          15.4392269288422
+
+                          \\bbenetskyi-rze\memory\% committed bytes in use :
+                          55.161898898697
+
+                          \\bbenetskyi-rze\memory\cache faults/sec :
+                          31.9248946794709
+
+                          \\bbenetskyi-rze\physicaldisk(_total)\% disk time :
+                          0
+
+                          \\bbenetskyi-rze\physicaldisk(_total)\current disk queue length :
+                          0
+> $Samples = (Get-Counter “\\bbenetskyi-rze\processor(_total)\% processor time”).CounterSamples
+> $Samples | Select `
+ InstanceName,
+ @{Name=”CPU %”;Expression={[Decimal]::Round(($_.CookedValue / $CpuCores), 2)}}
+
+InstanceName CPU %
+------------ -----
+_total        3.23
+
+```
+
+
+[ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
