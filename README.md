@@ -65,7 +65,7 @@ https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-
     13. [Background Jobs](#background_jobs)
 7. [Killer Features](#features)
 8. [Real World Examples](#examples)
-
+9. [Azure VMs via PowerShell](#azure)
 
 
 <a name="intro"/>
@@ -1575,10 +1575,10 @@ Variables defined in a child scope are unavailable in the parent scope. However,
 ```powershell
 > $Script = "Script scope"
 > function myFunction {
->>      $Function = "Scope of the function"
->>      $Script
->>      $Script = "Trying to change a variable in the Script scope"
->> }
+      $Function = "Scope of the function"
+      $Script
+      $Script = "Trying to change a variable in the Script scope"
+ }
 > myFunction
 Script scope
 > $Script
@@ -2012,3 +2012,78 @@ _total        3.23
 
 
 [ValueFromPipelineByPropertyName](https://learn-powershell.net/2013/05/07/tips-on-implementing-pipeline-support/)
+
+
+<a name="azure"/>
+
+# Chapter #9 - Azure VMs via PowerShell
+
+#### Example #90
+```powershell
+> Connect-AzureRmAccount
+> Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Resources |
+  where {-not ([string]::IsNullOrEmpty($_.Locations)) } |
+  select -First 1 -ExpandProperty Locations
+North Europe
+West Europe
+...
+>$ResourceGroupName = "vm-ps-test"
+>$LocationName = "North Europe"
+> New-AzureRmResourceGroup -ResourceGroupName $ResourceGroupName -Location $LocationName
+UK West
+Korea Central
+ResourceGroupName : vm-ps-test
+Location          : northeurope
+ProvisioningState : Succeededp\powershell-live-talks>
+Tags              :
+ResourceId        : /subscriptions/***/resourceGroups/vm-ps-test
+> $cred = Get-Credential
+11572
+cmdlet Get-Credential at command pipeline position 1
+Supply values for the following parameters:
+Credential
+>$VMLocalAdminUser = "LocalAdminUser"
+>$VMLocalAdminSecurePassword = ConvertTo-SecureString '123456789!Qa' -AsPlainText -Force
+>$ComputerName = "mainVM"
+>$VMName = "MyVM"
+>$VMSize = "Standard_B1s"
+>$NetworkName = "MyNet"
+>$NICName = "MyNIC"
+>$SubnetName = "MySubnet"
+>$SubnetAddressPrefix = "10.0.0.0/24"
+>$VnetAddressPrefix = "10.0.0.0/16"
+>
+>$SingleSubnet = New-AzureRmVirtualNetworkSubnetConfig -Name $SubnetName -AddressPrefix $SubnetAddressPrefix
+>$Vnet = New-AzureRmVirtualNetwork -Name $NetworkName -ResourceGroupName $ResourceGroupName -Location $LocationName -AddressPrefix $VnetAddressPrefix -Subnet $SingleSubnet
+>$NIC = New-AzureRmNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $LocationName -SubnetId $Vnet.Subnets[0].Id
+>
+>$Credential = New-Object System.Management.Automation.PSCredential ($VMLocalAdminUser, $VMLocalAdminSecurePassword);
+>
+>$VirtualMachine = New-AzureRmVMConfig -VMName $VMName -VMSize $VMSize
+>$VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $ComputerName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
+>$VirtualMachine = Add-AzureRmVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
+>$VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2012-R2-Datacenter' -Version latest
+>New-AzureRmVM -ResourceGroupName $ResourceGroupName -Location $LocationName -VM $VirtualMachine -Verbose
+WARNING: New-AzureRmVM: A property of the output of this cmdlet will change in an upcoming breaking change release.
+The StorageAccountType property for a DataDisk will return Standard_LRS and Premium_LRS
+WARNING: Since the VM is created using premium storage, new standard storage account, visuavmpsmyvm091214290, is
+created for boot diagnostics.
+VERBOSE: Performing the operation "New" on target "MyVM".
+> 'configuration IISInstall
+>> {
+>>     node "localhost"
+>>     {
+>>         WindowsFeature IIS
+>>         {
+>>             Ensure = "Present"
+>>             Name = "Web-Server"
+>>         }
+>>     }
+>> }' > IisInstall.ps1
+> $storageAccount =  Get-AzureRMStorageAccount | Select -ExpandProperty StorageAccountName
+> Publish-AzureRmVMDscConfiguration -ConfigurationPath .\IisInstall.ps1 `
+ -ResourceGroupName $ResourceGroupName `
+ -StorageAccountName $storageAccount
+https://visuavmpsmyvm091214290.blob.core.windows.net/windows-powershell-dsc/IisInstall.ps1.zip
+
+```
