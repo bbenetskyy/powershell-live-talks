@@ -2014,6 +2014,14 @@ _total        3.23
 
 [Mandatory parameters in PowerShell](https://blogs.msdn.microsoft.com/santiagocanepa/2011/02/28/mandatory-parameters-in-powershell/)
 
+[Using Text Files With PowerShell](http://www.tomsitpro.com/articles/powershell-read-text-files,2-893.html)
+
+[Using HelpMessage in Parameter Attributes](https://social.technet.microsoft.com/Forums/ie/en-US/35d95d50-4ebf-4d9d-93c1-2034e3566f5b/using-helpmessage-in-parameter-attributes?forum=winserverpowershell)
+
+[Learn to Use Remoting in PowerShell](https://www.howtogeek.com/138624/geek-school-learn-to-use-remoting-in-powershell/)
+
+[Using Get-ChildIem to Find Files](https://www.pdq.com/blog/using-get-childitem-find-files/)
+
 <a name="azure"/>
 
 # Chapter #9 - Azure VMs via PowerShell
