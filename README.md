@@ -1431,7 +1431,7 @@ Now let's define simple function which checks [disk info](https://github.com/bbe
      Get-WmiObject -class Win32_logicalDisk -Filter `"DeviceID='`$Drive'`" -ComputerName `$ComputerName |
          Select PSComputerName, DeviceID,
              @{n='Size(GB)';e={`$_.size / 1gb -as [int]}},
-             @{n='Free(GB)';e={`$_.Freespace / 1gb -as [int]}
+             @{n='Free(GB)';e={`$_.Freespace / 1gb -as [int]}}
  }" | Out-File DiskInfo.ps1
 > [System.Net.Dns]::GetHostByName($VM)
 
